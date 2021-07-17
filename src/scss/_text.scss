@@ -1,0 +1,26 @@
+@for $i from 1 through 5 {
+  $index: $i - 1;
+  .hx-#{$i}x {
+    font-size: $font-size + 0.25em * $index;
+  }
+}
+.text-mid {
+  vertical-align: middle;
+}
+
+//.hx-text-green
+.hx-text-green {
+  color: $green;
+}
+//.hx-text-orange
+.hx-text-orange {
+  color: $orange;
+}
+//.hx-text-gray
+.hx-text-gray {
+  color: $gray-500;
+}
+//.hx-text-gray
+.hx-text-blue {
+  color: $blue;
+}

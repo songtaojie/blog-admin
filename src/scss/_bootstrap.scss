@@ -1,0 +1,81 @@
+// bootstrap 覆盖样式
+.dropdown {
+  .dropdown-toggle {
+    &::after {
+      border-top: 0.3rem solid #fff;
+      transition: all 0.5s ease;
+      -ms-transition: all 0.5s ease;
+      -moz-transition: all 0.5s ease;
+      -webkit-transition: all 0.5s ease;
+      -o-transition: all 0.5s ease;
+    }
+  }
+
+  &.show {
+    .dropdown-toggle {
+      &::after {
+        transform: rotate(180deg);
+        border-top: 0.3rem solid #fff;
+      }
+    }
+  }
+}
+
+.dropdown-menu {
+  background-color: #343a40;
+  z-index: 1005;
+
+  .dropdown-item {
+    line-height: 1.9995em;
+    color: #fff;
+
+    &:hover,
+    &:focus,
+    &.active {
+      color: #00c1de;
+      background-color: transparent;
+    }
+  }
+  &.show {
+    width: 100%;
+    height: auto;
+    // background: rgba(0, 0, 0, 0.5);
+    background: transparent;
+    position: fixed;
+    top: 3.25rem;
+    padding: 0;
+    margin: 0;
+
+    a {
+      background: #12b7de;
+      display: block;
+      font-weight: bold;
+      float: right;
+      // &:last-child {
+      //   padding-bottom: 100%;
+      // }
+    }
+  }
+}
+// .dropdown.show .dropdown-toggle::after {
+//   transform: rotate(180deg);
+// }
+.d-flex:not(.flex-column) > .flex-fill {
+  width: 0;
+}
+
+a:focus,
+button:focus {
+  outline: 1px dotted;
+  outline: none;
+}
+
+//table样式
+.table {
+  margin-bottom: 0.5rem;
+}
+.table .thead-gray th {
+  color: #666;
+  background-color: #f2f2f2;
+  border-color: #dee2e6;
+}

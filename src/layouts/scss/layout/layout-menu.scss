@@ -1,0 +1,21 @@
+.hx-aside {
+  width: 14rem;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 98;
+  overflow-x: hidden;
+  display: flex !important;
+  -ms-flex-direction: column !important;
+  flex-direction: column !important;
+  background-color: #3b3e47;
+}
+
+.hx-menu {
+  background-color: $m-bg;
+  width: 100%;
+  overflow: hidden;
+  border-right: none;
+}

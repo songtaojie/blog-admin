@@ -1,0 +1,64 @@
+@import 'layout-navbar';
+@import 'layout-brand';
+@import 'layout-menu';
+@import 'layout-tab';
+.hx-body {
+  padding-top: 3.5rem;
+  padding-left: 14rem;
+}
+.hx-main {
+  display: block;
+  background-color: #ffffff;
+  height: 100%;
+}
+/*动画效果*/
+.hx-aside,
+.hx-menu,
+.hx-fiexd-top,
+.hx-body {
+  transition: all 0.3s ease;
+  -webkit-transition: all 0.3s ease;
+}
+
+// mini
+.hx-aside-mini {
+  .hx-brand {
+    .hx-brand-logo {
+      display: none !important;
+    }
+    .hx-thin-toggler {
+      .hx-brand-toggler-icon {
+        &::before,
+        &::after {
+          left: 0;
+          right: auto;
+        }
+      }
+    }
+  }
+
+  .hx-body {
+    padding-left: 3.75rem;
+    .hx-navbar {
+      left: 3.75rem;
+    }
+  }
+}
+
+/*重写element css */
+.el-main {
+  padding: 0 0.8rem;
+}
+.el-scrollbar__bar.is-horizontal {
+  display: none !important;
+}
+.el-scrollbar__wrap {
+  overflow-x: hidden;
+}
+.el-select-dropdown .el-scrollbar .el-scrollbar__wrap {
+  overflow: scroll;
+}
+/*scrollbar滚动条*/
+.hx-aside-scrollbar {
+  height: calc(100% - 3.5rem);
+}

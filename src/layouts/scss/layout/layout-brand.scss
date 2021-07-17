@@ -1,0 +1,138 @@
+$icon: '.hx-brand-toggler-icon';
+//颜色
+$toggler-icon-color: #5d5f77;
+$toggler-icon-hover-color: #716aca;
+
+/*brand*/
+.hx-brand {
+  background-color: $m-brand-bg;
+  padding: 0px 1.5rem;
+  height: 3.5rem;
+  display: flex !important;
+  -ms-flex-pack: center !important;
+  justify-content: center !important;
+  .hx-brand-logo {
+    display: flex !important;
+    -ms-flex-align: center !important;
+    align-items: center !important;
+  }
+  .hx-brand-link {
+    color: #fff !important;
+  }
+}
+
+.hx-brand-toggler {
+  margin-left: auto;
+  padding: 0.625rem 0.5rem;
+  font-size: 1.25rem;
+  line-height: 1;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  &.hx-thin-toggler {
+    &:hover {
+      #{$icon} {
+        background-color: $toggler-icon-hover-color;
+
+        &::before,
+        &::after {
+          background-color: $toggler-icon-hover-color;
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+#{$icon} {
+  display: block;
+  position: relative;
+  min-height: 1px;
+  border-radius: 0px;
+  transition: all 0.4s ease;
+  -webkit-transition: all 0.4s ease;
+}
+
+.hx-thick-toggler {
+  #{$icon} {
+    width: 1.875rem;
+    height: 0.3rem;
+    background-color: #fff;
+
+    &::before,
+    &::after {
+      content: '';
+      display: block;
+      width: 1.875rem;
+      height: 0.3rem;
+      position: absolute;
+      background: #fff;
+      -webkit-transition-property: margin, -webkit-transform;
+      transition-property: margin, -webkit-transform;
+      transition-property: margin, transform;
+      transition-property: margin, transform, -webkit-transform;
+      -webkit-transition-duration: 300ms;
+      transition-duration: 300ms;
+    }
+
+    &::before {
+      margin-top: -0.625rem;
+    }
+
+    &::after {
+      margin-top: 0.625rem;
+    }
+  }
+}
+
+.hx-thin-toggler {
+  #{$icon} {
+    width: 1.625rem;
+    height: 2px;
+    background-color: $toggler-icon-color;
+
+    &::before,
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      right: 0;
+      left: auto;
+      width: 100%;
+      height: 2px;
+      min-height: 1px;
+      border-radius: 0px;
+      transition: all 0.4s ease;
+      -webkit-transition: all 0.4s ease;
+      background-color: $toggler-icon-color;
+    }
+
+    &::before {
+      width: 50%;
+      margin-top: -0.5rem;
+    }
+
+    &::after {
+      width: 75%;
+      margin-top: 0.5rem;
+    }
+  }
+}
+
+//导航条合拢时*/
+.hx-brand-mini {
+  .hx-thin-toggler {
+    #{$icon} {
+      &::before,
+      &::after {
+        left: 0;
+        right: auto;
+      }
+    }
+  }
+  .navbar-brand,
+  .hx-brand-text {
+    display: none;
+  }
+}
