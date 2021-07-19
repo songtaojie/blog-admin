@@ -61,10 +61,6 @@ export default {
   },
 
   currentActived: null,
-  mounted: function () {
-    console.log(this)
-    // this.$bus.on('to-mini', this.toMini)
-  },
   methods: {
     doSwitchMenu() {
       this.isMiniLayout = !this.isMiniLayout

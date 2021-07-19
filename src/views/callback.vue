@@ -23,7 +23,6 @@ export default {
       const that = this
       await applicationUserManager.signinRedirectCallback()
       const user = await applicationUserManager.getUser()
-      console.log(user)
       var curTime = new Date()
       var expiredate = new Date(
         curTime.setSeconds(curTime.getSeconds() + user.expires_at)
@@ -40,7 +39,6 @@ export default {
       window.localStorage.user = JSON.stringify(user)
       that.$router.replace('/')
     } catch (e) {
-      console.log(e)
       // this.$root.$emit('show-snackbar', { message: e })
     }
   },

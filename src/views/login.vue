@@ -76,9 +76,8 @@ export default {
         if (valid) {
           that.isLoading = true
           authorize(that.form)
-            .then(res => {
+            .then(() => {
               that.isLoading = false
-              console.log(res)
               that.$router.push({
                 path: that.$route.query.redirect || '/'
               })
