@@ -141,7 +141,6 @@ export function del(url, params) {
   if (!utils.isEmpty(params)) {
     params = filterNull(params)
   }
-  debugger
   return new Promise((resolve, reject) => {
     axios
       .delete(url, params)
