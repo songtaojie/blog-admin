@@ -29,5 +29,11 @@ export default {
   },
   checkEmail(email) {
     return request.get(`${routePrefix}/CheckEmail/${email}`)
+  },
+  assignRole(data) {
+    return request.post(`${routePrefix}/AssignRole`, data)
+  },
+  getRoleById(userId) {
+    return request.get(`${routePrefix}/GetRoleById/${userId}`)
   }
 }

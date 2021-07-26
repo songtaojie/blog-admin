@@ -7,6 +7,7 @@ import router from './routers'
 import store from './store'
 import Layouts from '@/layouts/index'
 import Cookies from 'js-cookie'
+import Permission from './directive/permission/index.js'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
@@ -21,6 +22,7 @@ Vue.use(ElementUI)
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
 Vue.use(Layouts)
+Vue.use(Permission)
 Cookies.set('test', '123123213')
 Vue.config.productionTip = false
 

@@ -77,6 +77,10 @@ const permission = {
     },
     SET_ROUTERS: (state, routers) => {
       state.routers = routers
+    },
+    CLEAR_ROUTERS: (state) => {
+      state.isAddRoute = false
+      state.routers = []
     }
   },
   actions: {

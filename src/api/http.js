@@ -206,7 +206,15 @@ function handle401Error(config) {
   if (!EnabledIDS4) {
     if (!store.getters.auth.expired) {
       var token = store.getters.auth.access_token
-      post(REFRESH_TOKEN_API, { token: token }).then((res) => {
+      var data = QS.stringify({ token })
+      axios({
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        method: 'post',
+        url: REFRESH_TOKEN_API,
+        data: data
+      }).then((res) => {
         if (res && res.succeeded) {
           loginSuccess(res)
           config.__isRetryRequest = true
@@ -215,9 +223,11 @@ function handle401Error(config) {
           return axios(config)
         }
         // 刷新token失败 清除token信息并跳转到登录页面
+        signIn()
       })
+    } else {
+      signIn()
     }
-    signIn()
   } else {
     signIn()
   }
@@ -236,7 +246,14 @@ axios.interceptors.response.use(
       }
       return Promise.reject(res)
     }
-
+    // 判断token是否过期，如果过期还响应成功，说明是从缓存中获取的，这时刷新下token
+    // var tokenExpired = res.headers['token-expired']
+    // var isRefreshApi = res.config.url.indexOf(REFRESH_TOKEN_API.toLocaleLowerCase()) >= 0
+    // var isRetryRequest = res.config.__isRetryRequest
+    // debugger
+    // if ((tokenExpired === 'true' || tokenExpired === true) && !isRefreshApi && !isRetryRequest) {
+    //   handle401Error(res.config)
+    // }
     return res.data
   },
   (e) => {

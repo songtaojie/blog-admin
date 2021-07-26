@@ -13,10 +13,9 @@ export const isString = function (value) {
  */
 export const isArray = function (value) {
   if ('isArray' in Array) {
-    Array.isArray(value)
-  } else {
-    return toString.call(value) === '[object Array]'
+    return Array.isArray(value)
   }
+  return toString.call(value) === '[object Array]'
 }
 /**
  * 判断给定值是否为空
@@ -57,12 +56,12 @@ export const isSimpleObject = function (value) {
  * @param {Object} object 要检查的对象
  * @return {Boolean} true不为空
  */
-export const isEmptyObject = function(object) {
+export const isEmptyObject = function (object) {
   var key
   for (key in object) {
-      if (object.hasOwnProperty(key)) {
-          return false
-      }
+    if (object.hasOwnProperty(key)) {
+      return false
+    }
   }
 
   return true
@@ -103,34 +102,34 @@ export const isFunction = function (value) {
 function s4() {
   return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1)
 }
-export const guid = function() {
+export const guid = function () {
   return `${s4() + s4()}-${s4()}-${s4()}-${s4() + s4() + s4()}`
 }
 
 export function dateFormat(time, format) {
-      var date = new Date(time)
-      if(isEmpty(format)) {
-        format = 'yyyy-MM-dd'
-      }
-      var o = {
-        'M+' : date.getMonth() + 1, // 月份
-        'd+' : date.getDate(), // 日
-        'H+' : date.getHours(), // 小时
-        'h+' : date.getHours(), // 小时
-        'm+' : date.getMinutes(), // 分
-        's+' : date.getSeconds(), // 秒
-        'q+' : Math.floor((date.getMonth() + 3) / 3), // 季度
-        'S'  : date.getMilliseconds() // 毫秒
+  var date = new Date(time)
+  if (isEmpty(format)) {
+    format = 'yyyy-MM-dd'
+  }
+  var o = {
+    'M+': date.getMonth() + 1, // 月份
+    'd+': date.getDate(), // 日
+    'H+': date.getHours(), // 小时
+    'h+': date.getHours(), // 小时
+    'm+': date.getMinutes(), // 分
+    's+': date.getSeconds(), // 秒
+    'q+': Math.floor((date.getMonth() + 3) / 3), // 季度
+    'S': date.getMilliseconds() // 毫秒
+  }
+  if (/(y+)/.test(format)) {
+    format = format.replace(RegExp.$1, `${date.getFullYear()}`.substr(4 - RegExp.$1.length))
+  }
+  for (var k in o) {
+    if (new RegExp(`(${k})`).test(format)) {
+      format = format.replace(RegExp.$1, RegExp.$1.length === 1 ? o[k] : `00${o[k]}`.substr(`${o[k]}`.length))
     }
-    if(/(y+)/.test(format)) {
-      format = format.replace(RegExp.$1, `${date.getFullYear()}`.substr(4 - RegExp.$1.length))
-    }
-    for(var k in o) {
-        if(new RegExp(`(${k})`).test(format)) {
-          format = format.replace(RegExp.$1, RegExp.$1.length === 1 ? o[k] : `00${o[k]}`.substr(`${o[k]}`.length))
-        }
-    }
-    return format
+  }
+  return format
 }
 /**
  * 是否是外部链接

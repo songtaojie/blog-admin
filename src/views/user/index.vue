@@ -5,7 +5,7 @@
       <el-table-column header-align="center" label="用户名" prop="userName" width="120"></el-table-column>
       <el-table-column header-align="center" label="昵称" prop="nickName" width="180"></el-table-column>
       <el-table-column header-align="center" label="邮箱" prop="email" width="120"></el-table-column>
-      <el-table-column header-align="center" label="角色" prop="role"></el-table-column>
+      <el-table-column header-align="center" label="角色" prop="userRoleName"></el-table-column>
       <el-table-column header-align="center" label="注册时间" prop="registerTime" width="180"></el-table-column>
       <el-table-column header-align="center" label="上次登陆ip" prop="loginIp" width="120"></el-table-column>
       <el-table-column header-align="center" label="上次登陆时间" prop="lastLoginTime" width="180"></el-table-column>
@@ -63,13 +63,13 @@
       <el-form :model="formData" :rules="rules" label-width="85px">
         <el-form-item label="角色" prop="newPassWord">
           <el-select multiple placeholder="请选择角色" style="width:100%" v-model="formData.roldIds">
-            <el-option :key="item.id" :label="item.label" :value="item.value" text-field="name" v-for="item in roleList" value-field="id"></el-option>
+            <el-option :key="item.id" :label="item.name" :value="item.id" text-field="name" v-for="item in roleList" value-field="id"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
       <div class="dialog-footer" slot="footer">
         <el-button @click="roleDialogVisible = false">取 消</el-button>
-        <el-button @click="changePwd" type="primary">确 定</el-button>
+        <el-button @click="assignRole" type="primary">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -180,8 +180,26 @@ export default {
       this.editId = row.id
     },
     showRoleDialog(row) {
+      var that = this
       this.roleDialogVisible = true
       this.editId = row.id
+      userApi.getRoleById(row.id)
+        .then(res => {
+          var roleIds = res.data.map(s => s.roleId)
+          that.formData.roldIds = roleIds
+        })
+    },
+    assignRole() {
+      var that = this
+      var data = {
+        userId: this.editId,
+        roleIds: this.formData.roldIds
+      }
+      userApi.assignRole(data)
+        .then(() => {
+          that.roleDialogVisible = false
+          that.getList()
+        })
     }
   },
   created() {

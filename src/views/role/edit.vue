@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { isEmpty } from '../../common/index'
+import { isEmpty, isArray } from '../../common/index'
 import roleApi from '../../api/admin/role.js'
 import permissionApi from '../../api/admin/permission.js'
 export default {
@@ -54,7 +54,8 @@ export default {
         code: '',
         description: '',
         orderSort: 0,
-        isEnabled: true
+        isEnabled: true,
+        menuIds: []
       },
       menuTreeProps: {
         checkStrictly: false,
@@ -72,6 +73,7 @@ export default {
   methods: {
     onSubmit() {
       var that = this
+      that.formData.menuIds = that.$refs.menuTree.getCheckedKeys()
       if (isEmpty(that.id)) {
         that.loading = true
         roleApi.add(that.formData)
@@ -104,7 +106,10 @@ export default {
       roleApi.getDetail(id)
         .then(res => {
           that.formData = res.data
-          that.changeMenuTreeData()
+          that.changeMenuTreeData(res.data.menuIds)
+          // this.$nextTick(() => {
+          //   this.$refs.menuTree.setCheckedKeys(res.data.menuIds)
+          // })
         })
     },
     onBeforeClose() {
@@ -113,14 +118,9 @@ export default {
     onDrawerOpen() {
       if (!isEmpty(this.id)) {
         this.getDetail(this.id)
-        roleApi.getSelectMenuList(this.id).then(res => {
-          this.$nextTick(() => {
-            this.$refs.menuTree.setCheckedKeys(res.data)
-          })
-        })
       } else if (this.$refs.ruleForm) {
         this.$refs.ruleForm.resetFields()
-        this.changeMenuTreeData()
+        this.changeMenuTreeData([])
       }
     },
     onSaveSuccess() {
@@ -132,7 +132,7 @@ export default {
           this.menuTreeList = res.data
         })
     },
-    changeMenuTreeData() {
+    changeMenuTreeData(checkIds) {
       var menuTreeList = [...this.menuTreeList]
       if (this.formData.code === this.superAdminCode) {
         this.setDsiabledCheck(menuTreeList, true)
@@ -140,6 +140,9 @@ export default {
         this.setDsiabledCheck(menuTreeList, false)
       }
       this.menuTreeList = menuTreeList
+      if (isArray(checkIds)) {
+        this.$refs.menuTree.setCheckedKeys(checkIds)
+      }
     },
     setDsiabledCheck(menuTreeList, disabled) {
       if (menuTreeList && menuTreeList.length > 0) {
