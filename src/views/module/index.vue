@@ -1,6 +1,7 @@
 <template>
   <div class="p-2 text-left">
     <el-button @click="handleAdd" class="mb-2">添加</el-button>
+    <el-button @click="syncInterface" class="mb-2">同步接口</el-button>
     <el-table :data="tableData" border>
       <el-table-column header-align="center" label="接口名称" prop="name" width="120"></el-table-column>
       <el-table-column header-align="center" label="接口地址" prop="linkUrl" width="200"></el-table-column>
@@ -97,6 +98,9 @@ export default {
           that.totalCount = res.data.totalCount
           that.tableData = res.data.items
         })
+    },
+    syncInterface() {
+
     }
   },
   created() {
