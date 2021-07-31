@@ -6,6 +6,9 @@ export default {
   getPage(data) {
     return request.post(`${routePrefix}/getpage`, data)
   },
+  getList(data) {
+    return request.post(`${routePrefix}/getList`, data)
+  },
   add(data) {
     return request.post(`${routePrefix}/add`, data)
   },
@@ -17,5 +20,8 @@ export default {
   },
   del(id) {
     return request.del(`${routePrefix}/Delete/${id}`)
+  },
+  syncInterface() {
+    return request.post(`${routePrefix}/syncInterface`)
   }
 }

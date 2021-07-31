@@ -3,8 +3,8 @@
     <el-button @click="handleAdd" class="mb-2">添加</el-button>
     <el-button @click="syncInterface" class="mb-2">同步接口</el-button>
     <el-table :data="tableData" border>
-      <el-table-column header-align="center" label="接口名称" prop="name" width="120"></el-table-column>
-      <el-table-column header-align="center" label="接口地址" prop="linkUrl" width="200"></el-table-column>
+      <el-table-column header-align="center" label="接口名称" prop="name" width="220"></el-table-column>
+      <el-table-column header-align="center" label="接口地址" prop="routeUrl" width="200"></el-table-column>
       <el-table-column header-align="center" label="描述" prop="description"></el-table-column>
       <el-table-column header-align="center" label="创建者" prop="creater" width="120"></el-table-column>
       <el-table-column header-align="center" label="创建时间" prop="createTime" width="180"></el-table-column>
@@ -50,7 +50,7 @@ export default {
       id: '',
       queryParam: {
         PageIndex: 1,
-        PageSize: 2,
+        PageSize: 10,
         SortKey: '',
         SortType: 0
       }
@@ -70,7 +70,7 @@ export default {
     },
     handleDelete(row) {
       const that = this
-      that.$confirm('确定要删除该文章?', '提示', {
+      that.$confirm('确定要删除该接口?', '提示', {
         type: 'warning',
         confirmButtonText: '确认',
         cancelButtonText: '取消'
@@ -100,7 +100,12 @@ export default {
         })
     },
     syncInterface() {
-
+      var that = this
+      moduleApi.syncInterface()
+        .then(() => {
+          that.$message.success('同步成功')
+          that.getList()
+        })
     }
   },
   created() {

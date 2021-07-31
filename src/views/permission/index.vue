@@ -2,11 +2,12 @@
   <div class="p-2 text-left">
     <el-button @click="handleAdd" class="mb-2">添加</el-button>
     <el-table :data="tableData" border row-key="id">
+      <el-table-column header-align="center" label="菜单编号" prop="code" width="120"></el-table-column>
       <el-table-column header-align="center" label="菜单/按钮名称" prop="name" width="120"></el-table-column>
       <el-table-column align="center" label="菜单类型" prop="type_V" width="100"></el-table-column>
-      <el-table-column header-align="center" label="菜单路由" prop="path" width="100"></el-table-column>
+      <el-table-column header-align="center" label="菜单路由" prop="path" width="120"></el-table-column>
       <el-table-column header-align="center" label="组件路径" prop="component" width="120"></el-table-column>
-      <el-table-column header-align="center" label="描述" prop="description"></el-table-column>
+      <el-table-column header-align="center" label="请求接口" prop="routeUrl"></el-table-column>
       <el-table-column align="center" label="是否显示" prop="isHide" width="100">
         <template slot-scope="scope">{{scope.row.isHide?'隐藏':'显示'}}</template>
       </el-table-column>

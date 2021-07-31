@@ -100,8 +100,8 @@ const permission = {
                 routeList = filterAsyncRouter(routeList) // 过滤路由
                 var routes = constRouterMap.concat(routeList)
                 commit('SET_ROUTERS', routes)
-                resolve(routeList)
               }
+              resolve(routeList)
             } else {
               reject(res.data.message)
             }

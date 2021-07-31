@@ -5,8 +5,8 @@
         <el-form-item label="接口名称" prop="name">
           <el-input autocomplete="off" placeholder="请输入接口名称" v-model="formData.name"></el-input>
         </el-form-item>
-        <el-form-item label="接口地址:" prop="linkUrl">
-          <el-input placeholder="请输入接口地址" required v-model="formData.linkUrl"></el-input>
+        <el-form-item label="接口地址:" prop="routeUrl">
+          <el-input placeholder="请输入接口地址" required v-model="formData.routeUrl"></el-input>
         </el-form-item>
         <el-form-item label="控制器:">
           <el-input placeholder="请输入控制器" v-model="formData.controller"></el-input>
@@ -48,13 +48,11 @@ export default {
   },
   data() {
     return {
-      name: 'RoleName',
-      title: '写博客-海·星の博客',
       loading: false,
       formData: {
         id: '',
         name: '',
-        linkUrl: '',
+        routeUrl: '',
         controller: '',
         action: '',
         description: '',
@@ -65,7 +63,7 @@ export default {
         name: [
           { required: true, message: '请输入接口名称', trigger: 'blur' }
         ],
-        linkUrl: [
+        routeUrl: [
           { required: true, message: '请输入接口地址', trigger: 'blur' }
         ]
       }
@@ -136,8 +134,6 @@ export default {
 #module-sidebar {
   .form-row {
     align-items: center;
-  }
-  .hx-sidebar-header {
   }
 }
 </style>

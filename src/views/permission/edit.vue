@@ -21,9 +21,18 @@
             style="width: 100%"
           />
         </el-form-item>
-        <el-form-item label="菜单/按钮名称:" prop="name">
-          <el-input autocomplete="off" placeholder="请输入菜单/按钮名称" v-model="formData.name"></el-input>
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="菜单/按钮编号:" prop="code">
+              <el-input autocomplete="off" placeholder="请输入菜单/按钮编号" v-model="formData.code"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="菜单/按钮名称:" prop="name">
+              <el-input autocomplete="off" placeholder="请输入菜单/按钮名称" v-model="formData.name"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="菜单路由:" prop="path" v-if="formData.menuType !==2">
           <el-tooltip placement="top">
             <div slot="content">
@@ -49,6 +58,19 @@
             </el-input>
             <iconList @selectIcon="selectIcon" class="iconList m-t-20" ref="iconSelect" />
           </el-popover>
+        </el-form-item>
+        <el-form-item label="接口地址" prop="moduleId">
+          <el-select
+            :loading="moduleLoading"
+            :remote-method="searchModules"
+            filterable
+            placeholder="请选择接口"
+            remote
+            style="width:100%"
+            v-model="formData.moduleId"
+          >
+            <el-option :key="item.id" :label="item.routeUrl" :value="item.id" text-field="routeUrl" v-for="item in moduleList" value-field="id"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="序号:">
           <el-input placeholder="请输入序号" type="number" v-model.number="formData.orderSort"></el-input>
@@ -82,6 +104,7 @@
 <script>
 import { isEmpty } from '../../common/index'
 import permissionApi from '../../api/admin/permission'
+import moduleApi from '../../api/admin/module'
 import iconList from '@/components/iconList'
 export default {
   components: { iconList },
@@ -99,8 +122,11 @@ export default {
     return {
       name: 'RoleName',
       loading: false,
+      moduleLoading: false,
+      moduleList: [],
       formData: {
         id: '',
+        code: '',
         parentId: '',
         name: '',
         menuType: 1,
@@ -111,18 +137,22 @@ export default {
         isEnabled: true,
         isHide: false,
         iskeepAlive: false,
-        icon: ''
+        icon: '',
+        moduleId: ''
       },
       pullDownList: [],
       rules: {
+        code: [
+          { required: true, message: '请输入菜单/按钮编号', trigger: 'blur' }
+        ],
         name: [
-          { required: true, message: '请输入接口名称', trigger: 'blur' }
+          { required: true, message: '请输入菜单/按钮名称', trigger: 'blur' }
         ],
         path: [
           { required: true, message: '请输入菜单路由', trigger: 'blur' }
         ],
-        linkUrl: [
-          { required: true, message: '请输入接口地址', trigger: 'blur' }
+        component: [
+          { required: true, message: '请输入菜单路由地址', trigger: 'blur' }
         ]
       }
     }
@@ -182,7 +212,6 @@ export default {
       this.formData.icon = item
     },
     selectParentMenu(value) {
-      debugger
       if (value && value.length > 0) {
         this.formData.parentId = value[0]
       }
@@ -192,6 +221,20 @@ export default {
         .then(res => {
           this.pullDownList = res.data
         })
+    },
+    searchModules(query) {
+      var that = this
+      if (isEmpty(query)) {
+        that.moduleList = []
+      } else {
+        that.moduleLoading = true
+        var data = { name: query }
+        moduleApi.getList(data)
+          .then(res => {
+            that.moduleLoading = false
+            that.moduleList = res.data
+          })
+      }
     }
   },
   computed: {
