@@ -10,7 +10,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="上级菜单" prop="parentId">
-          <el-input v-model="formData.parentId" v-show="false" />
+          <!-- <el-input v-model="formData.parentId" v-show="false" /> -->
           <el-cascader
             :options="pullDownList"
             :props="{ checkStrictly: true, label: 'name', value: 'id' }"
@@ -48,10 +48,10 @@
         <el-form-item label="组件路径:" prop="component" v-if="formData.menuType !==2">
           <el-input auto-complete="off" placeholder="请输入组件路径" v-model="formData.component"></el-input>
         </el-form-item>
-        <el-form-item label="描述:" v-if="formData.menuType !==2">
+        <el-form-item label="描述:">
           <el-input placeholder="请输入菜单描述" v-model="formData.description"></el-input>
         </el-form-item>
-        <el-form-item label="菜单图标:" prop="icon" v-if="formData.menuType !==2">
+        <el-form-item label="菜单图标:" prop="icon">
           <el-popover placement="bottom-start" trigger="click" width="440">
             <el-input placeholder="点击选择图标" slot="reference" v-model="formData.icon">
               <i :class="formData.icon" slot="prefix" v-if="formData.icon" />
@@ -59,7 +59,7 @@
             <iconList @selectIcon="selectIcon" class="iconList m-t-20" ref="iconSelect" />
           </el-popover>
         </el-form-item>
-        <el-form-item label="接口地址" prop="moduleId">
+        <el-form-item label="接口地址" prop="moduleId" v-if="formData.menuType !== 0">
           <el-select
             :loading="moduleLoading"
             :remote-method="searchModules"
@@ -160,29 +160,33 @@ export default {
   methods: {
     onSubmit() {
       var that = this
-      if (isEmpty(that.id)) {
-        that.loading = true
-        permissionApi.add(that.formData)
-          .then(() => {
-            that.loading = false
-            that.onSaveSuccess()
-            that.onCancle()
-          })
-          .catch(() => {
-            that.loading = false
-          })
-      } else {
-        that.loading = true
-        permissionApi.update(that.formData)
-          .then(() => {
-            that.loading = false
-            that.onSaveSuccess()
-            that.onCancle()
-          })
-          .catch(() => {
-            that.loading = false
-          })
-      }
+      this.$refs.ruleForm.validate(valid => {
+        if (valid) {
+          that.loading = true
+          if (isEmpty(that.id)) {
+            permissionApi.add(that.formData)
+              .then(() => {
+                that.loading = false
+                that.onSaveSuccess()
+                that.onCancle()
+              })
+              .catch(() => {
+                that.loading = false
+              })
+          } else {
+            permissionApi.update(that.formData)
+              .then(() => {
+                that.loading = false
+                that.onSaveSuccess()
+                that.onCancle()
+              })
+              .catch(() => {
+                that.loading = false
+              })
+          }
+        }
+      })
+
     },
     onCancle() {
       this.$refs.drawer.closeDrawer()

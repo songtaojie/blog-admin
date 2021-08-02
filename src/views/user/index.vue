@@ -167,7 +167,6 @@ export default {
     getRoleList() {
       var that = this
       roleApi.getList().then(res => {
-        debugger
         that.roleList = res.data
       })
     },

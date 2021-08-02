@@ -19,9 +19,12 @@ function filterAsyncRouter(asyncRouterMap) {
   // 注意这里的 asyncRouterMap 是一个数组
   const accessedRouters = asyncRouterMap.filter(route => {
     if (!utils.isEmpty(route.path)) {
-      if (route.path === '/' || route.path === '-') {// Layout组件特殊处理
+      if (route.path === '/') {// Layout组件特殊处理
         route.component = Welcome
-      } else {
+      } else if(route.path === '-') {
+        route.component = Layout
+      }
+      else {
         var nameArray = route.path.split('/').filter(item => item.length > 0)
         route.name = nameArray.join('_')
         if (!utils.isEmpty(route.component)) {
