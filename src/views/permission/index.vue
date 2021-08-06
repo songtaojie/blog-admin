@@ -1,8 +1,8 @@
 <template>
   <div class="p-2 text-left">
-    <el-button @click="handleAdd" class="mb-2">添加</el-button>
+    <el-button @click="handleAdd" class="mb-2" v-permission="permission.add">添加</el-button>
     <el-table :data="tableData" border row-key="id">
-      <el-table-column header-align="center" label="菜单编号" prop="code" width="120"></el-table-column>
+      <el-table-column header-align="center" label="菜单编号" prop="code" width="160"></el-table-column>
       <el-table-column header-align="center" label="菜单/按钮名称" prop="name" width="120"></el-table-column>
       <el-table-column align="center" label="菜单类型" prop="type_V" width="100"></el-table-column>
       <el-table-column header-align="center" label="菜单路由" prop="path" width="120"></el-table-column>
@@ -27,8 +27,8 @@
       </el-table-column>
       <el-table-column header-align="center" label="操作" width="180">
         <template slot-scope="scope">
-          <el-button @click="handleEdit(scope.row)" size="mini">编辑</el-button>
-          <el-button @click="handleDelete(scope.row)" size="mini" type="danger">删除</el-button>
+          <el-button @click="handleEdit(scope.row)" size="mini" v-permission="permission.edit">编辑</el-button>
+          <el-button @click="handleDelete(scope.row)" size="mini" type="danger" v-permission="permission.del">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -38,12 +38,14 @@
 <script>
 import permissionApi from '../../api/admin/permission.js'
 import PermissionEdit from './edit.vue'
+import { permission } from '../../common/permissionCode'
 export default {
   components: {
     PermissionEdit
   },
   data() {
     return {
+      permission,
       tableData: [],
       isLoading: false,
       totalCount: 0,

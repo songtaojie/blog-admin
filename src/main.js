@@ -30,7 +30,8 @@ Vue.config.productionTip = false
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 Vue.use(mavonEditor)
-
+import permission from './directive/permission'
+Vue.use(permission)
 const vue = new Vue({
   store,
   router,

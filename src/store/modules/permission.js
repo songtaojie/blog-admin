@@ -55,7 +55,8 @@ function filterAsyncRouter(asyncRouterMap) {
 const permission = {
   state: {
     isAddRoute: false,
-    routers: []
+    routers: [],
+    buttons: []
   },
   getters: {
     permission_Routers: (state, getters) => {
@@ -69,6 +70,17 @@ const permission = {
       }
       return routes || []
     },
+    permission_Buttons: (state, getters) => {
+      var buttons = state.buttons
+      if (utils.isEmpty(buttons) || buttons.length <= 0) {
+        var cacheButtonKey = `hx:permission:${getters.user.userId}`
+        var buttonList = getCacheRouter(cacheButtonKey)
+        if (!utils.isEmpty(buttonList) && buttonList.length >= 0) {
+          buttons = buttonList
+        }
+      }
+      return buttons || []
+    },
     permission_IsAddRoute: state => state.isAddRoute
   },
   mutations: {
@@ -77,6 +89,9 @@ const permission = {
     },
     SET_ROUTERS: (state, routers) => {
       state.routers = routers
+    },
+    SET_BUTTONS: (state, buttons) => {
+      state.buttons = buttons
     },
     CLEAR_ROUTERS: (state) => {
       state.isAddRoute = false
@@ -87,19 +102,27 @@ const permission = {
     GenerateRoutes({ commit, getters }) {
       return new Promise((resolve, reject) => {
         var cacheRouterKey = `hx:router:${getters.user.userId}`
+        var cacheButtonKey = `hx:permission:${getters.user.userId}`
         var routeList = getCacheRouter(cacheRouterKey)
+        var buttonList = getCacheRouter(cacheButtonKey)
         // 如果缓存中没有，则从数据库中获取
         if (utils.isEmpty(routeList) || routeList.length <= 0) {
           permissionApi.getRouters().then((res) => {
             if (res.succeeded) {
               console.info('%c get routers from api succeed!', 'color:green')
               // 后台拿到路由
-              routeList = res.data
+              routeList = res.data.routers
               if (routeList && routeList.length > 0) {
                 saveCacheRouter(cacheRouterKey, routeList) // 存储路由到sessionStorage
                 routeList = filterAsyncRouter(routeList) // 过滤路由
                 var routes = constRouterMap.concat(routeList)
                 commit('SET_ROUTERS', routes)
+              }
+              // button
+              buttonList = res.data.buttons
+              if (buttonList && buttonList.length > 0) {
+                saveCacheRouter(cacheButtonKey, buttonList) // 存储按钮到sessionStorage
+                commit('SET_BUTTONS', buttonList)
               }
               resolve(routeList)
             } else {
