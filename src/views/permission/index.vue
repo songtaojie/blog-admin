@@ -1,6 +1,6 @@
 <template>
   <div class="p-2 text-left">
-    <el-button @click="handleAdd" class="mb-2" v-permission="permission.add">添加</el-button>
+    <el-button @click="handleAdd" class="mb-2" v-if="!EnabledIDS4" v-permission="permission.add">添加</el-button>
     <el-table :data="tableData" border row-key="id">
       <el-table-column header-align="center" label="菜单编号" prop="code" width="160"></el-table-column>
       <el-table-column header-align="center" label="菜单/按钮名称" prop="name" width="120"></el-table-column>

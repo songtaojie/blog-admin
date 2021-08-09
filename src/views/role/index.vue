@@ -13,7 +13,10 @@
         </template>
       </el-table-column>
       <el-table-column header-align="center" label="操作" width="180">
-        <template slot-scope="scope">
+        <template slot-scope="scope" v-if="EnabledIDS4">
+          <el-button @click="showDialog(scope.row)" size="mini" v-permission="permission.assign">配置权限</el-button>
+        </template>
+        <template slot-scope="scope" v-else>
           <el-button @click="handleEdit(scope.row)" size="mini">编辑</el-button>
           <el-button @click="handleDelete(scope.row)" size="mini" type="danger">删除</el-button>
         </template>
@@ -30,23 +33,53 @@
         layout="prev, pager, next"
       ></el-pagination>
     </div>
+
+    <!-- 配置权限的dialog -->
+    <el-dialog :visible.sync="dialogVisible" title="分配权限" width="40%">
+      <el-form :model="formData" :rules="rules" label-width="85px">
+        <el-form-item label="菜单权限" prop="menuIds">
+          <el-tree :data.sync="menuTreeList" :props="menuTreeProps" empty-text="加载中，请稍后" node-key="id" ref="menuTree" show-checkbox />
+        </el-form-item>
+      </el-form>
+      <div class="dialog-footer" slot="footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button @click="assignPermission" type="primary">确 定</el-button>
+      </div>
+    </el-dialog>
+
     <role-edit :id="id" :visible.sync="showDrawer" @success="handleSuccess"></role-edit>
   </div>
 </template>
 <script>
 import roleApi from '../../api/admin/role.js'
+import permissionApi from '../../api/admin/permission.js'
 import RoleEdit from './edit.vue'
+import { EnabledIDS4 } from '../../common/constkey'
+import { permission } from '../../common/permissionCode'
+import { isArray } from '../../common/index'
 export default {
   components: {
     RoleEdit
   },
   data() {
     return {
+      EnabledIDS4,
+      permission,
       tableData: [],
       isLoading: false,
       totalCount: 0,
       showDrawer: false,
       id: '',
+      dialogVisible: false,
+      menuTreeList: [],
+      menuTreeProps: {
+        checkStrictly: false,
+        label: 'name',
+        value: 'id'
+      },
+      formData: {
+        menuIds: []
+      },
       queryParam: {
         PageIndex: 1,
         PageSize: 2,
@@ -97,10 +130,50 @@ export default {
           that.totalCount = res.data.totalCount
           that.tableData = res.data.items
         })
+    },
+    showDialog(row) {
+      var that = this
+      roleApi.GetPermissions(row.id)
+        .then(res => {
+          that.changeMenuTreeData(res.data)
+        })
+      that.dialogVisible = true
+    },
+    initRoleMenu() {
+      permissionApi.getUserMenuTree()
+        .then(res => {
+          this.menuTreeList = res.data
+        })
+    },
+    changeMenuTreeData(checkIds) {
+      var menuTreeList = [...this.menuTreeList]
+      if (this.formData.code === this.superAdminCode) {
+        this.setDsiabledCheck(menuTreeList, true)
+      } else {
+        this.setDsiabledCheck(menuTreeList, false)
+      }
+      this.menuTreeList = menuTreeList
+      if (isArray(checkIds)) {
+        this.$refs.menuTree.setCheckedKeys(checkIds)
+      }
+    },
+    setDsiabledCheck(menuTreeList, disabled) {
+      if (menuTreeList && menuTreeList.length > 0) {
+        menuTreeList.forEach(m => {
+          m.disabled = disabled
+          if (m.children && m.children.length > 0) {
+            this.setDsiabledCheck(m.children, disabled)
+          }
+        })
+      }
+    },
+    assignPermission() {
+
     }
   },
   created() {
     this.getList()
+    this.initRoleMenu()
   }
 }
 </script>

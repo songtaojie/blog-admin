@@ -23,5 +23,8 @@ export default {
   },
   getList() {
     return request.get(`${routePrefix}/getList`)
+  },
+  GetPermissions(id) {
+    return request.get(`${routePrefix}/GetPermissions/${id}`)
   }
 }
