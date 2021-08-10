@@ -1,6 +1,6 @@
 <template>
   <div class="p-2 text-left">
-    <el-button @click="handleAdd" class="mb-2">添加</el-button>
+    <el-button @click="handleAdd" class="mb-2" v-permission="roleCode.add">添加</el-button>
     <el-table :data="tableData" border>
       <el-table-column header-align="center" label="角色名" prop="name" width="120"></el-table-column>
       <el-table-column header-align="center" label="角色Code" prop="code" width="200"></el-table-column>
@@ -13,12 +13,10 @@
         </template>
       </el-table-column>
       <el-table-column header-align="center" label="操作" width="180">
-        <template slot-scope="scope" v-if="EnabledIDS4">
-          <el-button @click="showDialog(scope.row)" size="mini" v-permission="permission.assign">配置权限</el-button>
-        </template>
-        <template slot-scope="scope" v-else>
-          <el-button @click="handleEdit(scope.row)" size="mini">编辑</el-button>
-          <el-button @click="handleDelete(scope.row)" size="mini" type="danger">删除</el-button>
+        <template slot-scope="scope">
+          <el-button @click="showDialog(scope.row)" size="mini" v-permission="roleCode.assign">配置权限</el-button>
+          <el-button @click="handleEdit(scope.row)" size="mini" v-if="!EnabledIDS4" v-permission="roleCode.edit">编辑</el-button>
+          <el-button @click="handleDelete(scope.row)" size="mini" type="danger" v-if="!EnabledIDS4" v-permission="roleCode.del">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -36,9 +34,9 @@
 
     <!-- 配置权限的dialog -->
     <el-dialog :visible.sync="dialogVisible" title="分配权限" width="40%">
-      <el-form :model="formData" :rules="rules" label-width="85px">
+      <el-form :model="formData" label-width="85px">
         <el-form-item label="菜单权限" prop="menuIds">
-          <el-tree :data.sync="menuTreeList" :props="menuTreeProps" empty-text="加载中，请稍后" node-key="id" ref="menuTree" show-checkbox />
+          <el-tree :data.sync="menuTreeList" :props="menuTreeProps" check-strictly empty-text="加载中，请稍后" node-key="id" ref="menuTree" show-checkbox />
         </el-form-item>
       </el-form>
       <div class="dialog-footer" slot="footer">
@@ -55,7 +53,7 @@ import roleApi from '../../api/admin/role.js'
 import permissionApi from '../../api/admin/permission.js'
 import RoleEdit from './edit.vue'
 import { EnabledIDS4 } from '../../common/constkey'
-import { permission } from '../../common/permissionCode'
+import { role } from '../../common/permissionCode'
 import { isArray } from '../../common/index'
 export default {
   components: {
@@ -64,7 +62,8 @@ export default {
   data() {
     return {
       EnabledIDS4,
-      permission,
+      roleCode: role,
+      superAdminCode: 'SuperAdmin',
       tableData: [],
       isLoading: false,
       totalCount: 0,
@@ -73,11 +72,13 @@ export default {
       dialogVisible: false,
       menuTreeList: [],
       menuTreeProps: {
-        checkStrictly: false,
+        checkStrictly: true,
         label: 'name',
         value: 'id'
       },
       formData: {
+        roleId: '',
+        code: '',
         menuIds: []
       },
       queryParam: {
@@ -138,6 +139,9 @@ export default {
           that.changeMenuTreeData(res.data)
         })
       that.dialogVisible = true
+      that.formData.code = row.code
+      that.formData.roleId = row.id
+      window.menuTree = this.$refs.menuTree
     },
     initRoleMenu() {
       permissionApi.getUserMenuTree()
@@ -168,7 +172,15 @@ export default {
       }
     },
     assignPermission() {
-
+      var that = this
+      that.formData.menuIds = that.$refs.menuTree.getCheckedKeys()
+      roleApi.AssignPermission(that.formData)
+        .then((res) => {
+          if (res.succeeded) {
+            that.dialogVisible = false
+            that.getList()
+          }
+        })
     }
   },
   created() {

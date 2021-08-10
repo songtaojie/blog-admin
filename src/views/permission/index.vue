@@ -39,12 +39,14 @@
 import permissionApi from '../../api/admin/permission.js'
 import PermissionEdit from './edit.vue'
 import { permission } from '../../common/permissionCode'
+import { EnabledIDS4 } from '../../common/constkey'
 export default {
   components: {
     PermissionEdit
   },
   data() {
     return {
+      EnabledIDS4,
       permission,
       tableData: [],
       isLoading: false,

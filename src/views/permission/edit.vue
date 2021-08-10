@@ -205,8 +205,13 @@ export default {
       if (!isEmpty(this.id)) {
         this.getDetail(this.id)
       } else {
-        if (this.$refs.ruleForm) this.$refs.ruleForm.resetFields()
+        this.$nextTick(() => {
+          this.$refs.ruleForm.clearValidate()
+          // this.$refs.ruleForm.resetFields()
+        })
         if (this.$refs.treeMenu) this.$refs.treeMenu.handleClear()
+        this.formData.code = ''
+        this.formData.name = ''
         this.formData.parentId = ''
         this.formData.moduleId = ''
       }

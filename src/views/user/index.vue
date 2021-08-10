@@ -1,6 +1,6 @@
 <template>
   <div class="p-2 text-left">
-    <el-button @click="handleAdd" class="mb-2">添加</el-button>
+    <el-button @click="handleAdd" class="mb-2" v-permission="userCode.add">添加</el-button>
     <el-table :data="tableData" border>
       <el-table-column header-align="center" label="用户名" prop="userName" width="120"></el-table-column>
       <el-table-column header-align="center" label="昵称" prop="nickName" width="180"></el-table-column>
@@ -16,10 +16,10 @@
       </el-table-column>
       <el-table-column header-align="center" label="操作" width="180">
         <template slot-scope="scope">
-          <el-button @click="handleEdit(scope.row)" size="mini">编辑</el-button>
-          <el-button @click="showRoleDialog(scope.row)" size="mini">配置角色</el-button>
-          <el-button @click="handleDelete(scope.row)" size="mini" type="danger">删除</el-button>
-          <el-button @click="showPwdDialog(scope.row)" size="mini">修改密码</el-button>
+          <el-button @click="handleEdit(scope.row)" size="mini" v-permission="userCode.edit">编辑</el-button>
+          <el-button @click="showRoleDialog(scope.row)" size="mini" v-permission="userCode.assignRole">配置角色</el-button>
+          <el-button @click="handleDelete(scope.row)" size="mini" type="danger" v-permission="userCode.del">删除</el-button>
+          <el-button @click="showPwdDialog(scope.row)" size="mini" v-permission="userCode.changepwd">修改密码</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -79,6 +79,7 @@ import { isEmpty } from '../../common/index'
 import userApi from '../../api/admin/user.js'
 import roleApi from '../../api/admin/role.js'
 import UserEdit from './edit.vue'
+import { userCode } from '../../common/permissionCode'
 export default {
   components: {
     UserEdit
@@ -95,6 +96,7 @@ export default {
       }
     }
     return {
+      userCode,
       tableData: [],
       isLoading: false,
       totalCount: 0,
@@ -166,9 +168,14 @@ export default {
     },
     getRoleList() {
       var that = this
-      roleApi.getList().then(res => {
-        that.roleList = res.data
-      })
+      that.$store.dispatch('hasPermission', userCode.assignRole)
+        .then(r => {
+          if (r) {
+            roleApi.getList().then(res => {
+              that.roleList = res.data
+            })
+          }
+        })
     },
     changePwd() {
       var that = this

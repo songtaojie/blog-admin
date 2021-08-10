@@ -21,7 +21,7 @@ function filterAsyncRouter(asyncRouterMap) {
     if (!utils.isEmpty(route.path)) {
       if (route.path === '/') {// Layout组件特殊处理
         route.component = Welcome
-      } else if(route.path === '-') {
+      } else if (route.path === '-') {
         route.component = Layout
       }
       else {
@@ -102,6 +102,10 @@ const permission = {
     }
   },
   actions: {
+    hasPermission({ getters }, code) {
+      var buttons = getters.permission_Buttons || []
+      return buttons.includes(code)
+    },
     GenerateRoutes({ commit, getters }) {
       return new Promise((resolve, reject) => {
         var cacheRouterKey = `hx:router:${getters.user.userId}`

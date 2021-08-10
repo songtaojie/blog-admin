@@ -17,9 +17,6 @@
         <el-form-item label="是否启用:" prop="isEnabled">
           <el-switch v-model="formData.isEnabled"></el-switch>
         </el-form-item>
-        <el-form-item label="菜单权限" prop="menuIds">
-          <el-tree :data.sync="menuTreeList" :props="menuTreeProps" empty-text="加载中，请稍后" node-key="id" ref="menuTree" show-checkbox />
-        </el-form-item>
       </el-form>
       <div class="d-flex">
         <el-button @click="onCancle" class="flex-fill">取 消</el-button>
@@ -30,9 +27,8 @@
 </template>
 
 <script>
-import { isEmpty, isArray } from '../../common/index'
+import { isEmpty } from '../../common/index'
 import roleApi from '../../api/admin/role.js'
-import permissionApi from '../../api/admin/permission.js'
 export default {
   props: {
     visible: {
@@ -54,15 +50,8 @@ export default {
         code: '',
         description: '',
         orderSort: 0,
-        isEnabled: true,
-        menuIds: []
+        isEnabled: true
       },
-      menuTreeProps: {
-        checkStrictly: false,
-        label: 'name',
-        value: 'id'
-      },
-      menuTreeList: [],
       rules: {
         name: [
           { required: true, message: '请输入角色名称', trigger: 'blur' }
@@ -73,7 +62,6 @@ export default {
   methods: {
     onSubmit() {
       var that = this
-      that.formData.menuIds = that.$refs.menuTree.getCheckedKeys()
       if (isEmpty(that.id)) {
         that.loading = true
         roleApi.add(that.formData)
@@ -106,10 +94,6 @@ export default {
       roleApi.getDetail(id)
         .then(res => {
           that.formData = res.data
-          that.changeMenuTreeData(res.data.menuIds)
-          // this.$nextTick(() => {
-          //   this.$refs.menuTree.setCheckedKeys(res.data.menuIds)
-          // })
         })
     },
     onBeforeClose() {
@@ -120,39 +104,10 @@ export default {
         this.getDetail(this.id)
       } else if (this.$refs.ruleForm) {
         this.$refs.ruleForm.resetFields()
-        this.changeMenuTreeData([])
       }
     },
     onSaveSuccess() {
       this.$emit('success')
-    },
-    initRoleMenu() {
-      permissionApi.getUserMenuTree()
-        .then(res => {
-          this.menuTreeList = res.data
-        })
-    },
-    changeMenuTreeData(checkIds) {
-      var menuTreeList = [...this.menuTreeList]
-      if (this.formData.code === this.superAdminCode) {
-        this.setDsiabledCheck(menuTreeList, true)
-      } else {
-        this.setDsiabledCheck(menuTreeList, false)
-      }
-      this.menuTreeList = menuTreeList
-      if (isArray(checkIds)) {
-        this.$refs.menuTree.setCheckedKeys(checkIds)
-      }
-    },
-    setDsiabledCheck(menuTreeList, disabled) {
-      if (menuTreeList && menuTreeList.length > 0) {
-        menuTreeList.forEach(m => {
-          m.disabled = disabled
-          if (m.children && m.children.length > 0) {
-            this.setDsiabledCheck(m.children, disabled)
-          }
-        })
-      }
     }
   },
   computed: {
@@ -161,7 +116,6 @@ export default {
     }
   },
   created() {
-    this.initRoleMenu()
   }
 }
 </script>

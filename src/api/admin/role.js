@@ -26,5 +26,8 @@ export default {
   },
   GetPermissions(id) {
     return request.get(`${routePrefix}/GetPermissions/${id}`)
+  },
+  AssignPermission(data) {
+    return request.post(`${routePrefix}/AssignPermission`, data)
   }
 }
