@@ -12,13 +12,13 @@
         <el-form-item label="上级菜单" prop="parentId">
           <!-- <el-input v-model="formData.parentId" v-show="false" /> -->
           <el-cascader
-            :options="pullDownList"
+            :options="menuTreeList"
             :props="{ checkStrictly: true, label: 'name', value: 'id' }"
             :show-all-levels="false"
-            @change="selectParentMenu"
             clearable
             ref="treeMenu"
             style="width: 100%"
+            v-model="parentMenuIds"
           />
         </el-form-item>
         <el-row>
@@ -59,15 +59,16 @@
             <iconList @selectIcon="selectIcon" class="iconList m-t-20" ref="iconSelect" />
           </el-popover>
         </el-form-item>
-        <el-form-item label="接口地址" prop="moduleId" v-if="formData.menuType !== 0">
+        <el-form-item label="接口地址" prop="moduleIds" v-if="formData.menuType !== 0">
           <el-select
             :loading="moduleLoading"
             :remote-method="searchModules"
             filterable
+            multiple
             placeholder="请选择接口"
             remote
             style="width:100%"
-            v-model="formData.moduleId"
+            v-model="formData.moduleIds"
           >
             <el-option :key="item.id" :label="item.routeUrl" :value="item.id" text-field="routeUrl" v-for="item in moduleList" value-field="id"></el-option>
           </el-select>
@@ -138,9 +139,10 @@ export default {
         isHide: false,
         iskeepAlive: false,
         icon: '',
-        moduleId: ''
+        moduleIds: ''
       },
-      pullDownList: [],
+      menuTreeList: [],
+      parentMenuIds: [],
       rules: {
         code: [
           { required: true, message: '请输入菜单/按钮编号', trigger: 'blur' }
@@ -162,7 +164,12 @@ export default {
       var that = this
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
+          debugger
           that.loading = true
+          that.formData.parentId = ''
+          if (that.parentMenuIds.length > 0) {
+            that.formData.parentId = that.parentMenuIds[0]
+          }
           if (isEmpty(that.id)) {
             permissionApi.add(that.formData)
               .then(() => {
@@ -195,7 +202,12 @@ export default {
       var that = this
       permissionApi.getDetail(id)
         .then(res => {
-          that.formData = res.data
+          if (res.succeeded) {
+            that.formData = res.data
+            that.parentMenuIds = [that.formData.parentId]
+            that.moduleList = res.data.moduleList
+            delete that.formData.moduleList
+          }
         })
     },
     onBeforeClose() {
@@ -230,22 +242,20 @@ export default {
     getPullDownTree() {
       permissionApi.getUserMenuTree()
         .then(res => {
-          this.pullDownList = res.data
+          this.menuTreeList = res.data
         })
     },
     searchModules(query) {
       var that = this
-      if (isEmpty(query)) {
-        that.moduleList = []
-      } else {
-        that.moduleLoading = true
-        var data = { name: query }
-        moduleApi.getList(data)
-          .then(res => {
-            that.moduleLoading = false
+      that.moduleLoading = true
+      var data = { name: query }
+      moduleApi.getList(data)
+        .then(res => {
+          that.moduleLoading = false
+          if (res.succeeded) {
             that.moduleList = res.data
-          })
-      }
+          }
+        })
     }
   },
   computed: {
