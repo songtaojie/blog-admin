@@ -83,8 +83,8 @@ export default {
                 path: that.$route.query.redirect || '/'
               })
             })
-            .catch(e => {
-              ajaxError(e)
+            .catch(() => {
+              that.isLoading = false
             })
         }
       })

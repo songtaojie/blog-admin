@@ -238,10 +238,13 @@ axios.interceptors.response.use(
     // 对响应数据做些事
     if (res.data.succeeded === false) {
       if (res.data.statusCode === 401) {
+        res.isHandleError = true
         handle401Error(res.config)
       } else if (res.data.statusCode === 403) {
+        res.isHandleError = true
         toast(res.data.message || '您没有该操作的权限!')
       } else if (res.data.statusCode !== 99991) {
+        res.isHandleError = true
         ajaxError(res)
       }
       return Promise.reject(res)
