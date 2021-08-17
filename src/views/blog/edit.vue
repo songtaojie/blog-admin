@@ -122,7 +122,7 @@
 import HxInput from '@/components/HxInput.vue'
 import { guid, isEmpty } from '../../common/index'
 import HxSelect from '@/components/HxSelect.vue'
-import blogApi from '../../api/blog'
+import blogApi from '../../api/admin/blogmanage.js'
 import { TOKEN_TYPE } from '../../common/constkey'
 export default {
   name: 'edit',
@@ -307,12 +307,9 @@ export default {
     },
     getBlogTagList() {
       var that = this
-      this.$api.post('/admin/api/blogmanage/GetTagList')
-        .then(res => {
-          if (res && res.success) {
-            that.tagList = res.data
-          }
-        })
+      blogApi.getTagList().then(res => {
+        that.tagList = res.data
+      })
     },
     getHtml(data) {
       this.formData.contentHtml = data

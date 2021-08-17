@@ -3,7 +3,7 @@
     <el-table :data="tableData" border>
       <el-table-column header-align="center" label="请求Url" prop="url" width="180"></el-table-column>
       <el-table-column header-align="center" label="请求方式" prop="httpMethod" width="80"></el-table-column>
-      <el-table-column header-align="center" label="请求参数" prop="param"></el-table-column>
+      <el-table-column header-align="center" label="请求参数" prop="param" show-overflow-tooltip></el-table-column>
       <el-table-column header-align="center" label="返回结果" prop="result" show-overflow-tooltip></el-table-column>
       <el-table-column align="center" label="耗时(毫秒)" prop="elapsedTime" width="65"></el-table-column>
       <el-table-column header-align="center" label="操作时间" prop="operateTime" width="165"></el-table-column>

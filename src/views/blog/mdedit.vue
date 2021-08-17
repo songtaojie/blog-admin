@@ -1,6 +1,17 @@
 <template>
   <div class="hx-editor">
-    <mavon-editor :toolbars="toolbars" placeholder="开始编写博客" ref="mdedit" :value="value" :editable="editable" :boxShadow="false" :subfield="subfield" :defaultOpen="defaultOpen" @change="onEditorInput" @imgAdd="onImgAdd" />
+    <mavon-editor
+      :boxShadow="false"
+      :defaultOpen="defaultOpen"
+      :editable="editable"
+      :subfield="subfield"
+      :toolbars="toolbars"
+      :value="value"
+      @change="onEditorInput"
+      @imgAdd="onImgAdd"
+      placeholder="开始编写博客"
+      ref="mdedit"
+    />
   </div>
 </template>
 <script>
@@ -8,6 +19,7 @@
 // import axios from 'axios'
 import '@/scss/blog/hxeditor.scss'
 import { isEmpty } from '../../common/index'
+import attachApi from '../../api/attach.js'
 export default {
   name: 'MdEdit',
   props: {
@@ -23,7 +35,7 @@ export default {
   // components:{
   //   mavonEditor:() => import('mavon-editor')
   // },
-  data () {
+  data() {
     var clientWidth = document.body.clientWidth
     var mintoolbars = {
       header: true, // 标题
@@ -64,14 +76,14 @@ export default {
     }
   },
   methods: {
-    onEditorInput (value, render) {
+    onEditorInput(value, render) {
       this.$emit('input', value)
       this.$emit('getHtml', render)
     },
     /**
      * 添加图片
      */
-    onImgAdd (pos, imgfile) {
+    onImgAdd(pos, imgfile) {
       var that = this
       var formdata = new FormData()
       formdata.append('file', imgfile)
@@ -91,7 +103,7 @@ export default {
       //   console.log(res)
       // })
     },
-    onResize () {
+    onResize() {
       var that = this
       if (that.clientWidth < 768) {
         that.subfield = false
@@ -103,7 +115,7 @@ export default {
     }
   },
   watch: {
-    clientWidth (value) {
+    clientWidth(value) {
       var that = this
       if (!that.timer) {
         that.clientWidth = value
@@ -116,18 +128,15 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     var that = this
     if (isEmpty(that.value)) {
-      that.$api.get('/api/attach/GetMdTemplate')
-        .then(res => {
-          if (res.success) {
-            that.onEditorInput(res.data)
-          }
-        })
+      attachApi.getMdTemplate().then(res => {
+        that.onEditorInput(res.data)
+      })
     }
   },
-  mounted () {
+  mounted() {
     var that = this
     window.onresize = function () {
       that.clientWidth = document.body.clientWidth
