@@ -23,7 +23,7 @@ export const constRouterMap = [
     component: () => import('@/views/welcome.vue'),
     meta: {
       requireAuth: true,
-      title: '欢迎页1',
+      title: '欢迎页',
       icon: 'el-icon-s-home'
     }
   },

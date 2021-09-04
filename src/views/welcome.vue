@@ -1,167 +1,142 @@
 <template>
-  <div style="margin-top: 30px;">
-    欢迎页
-    <!-- <el-row class="panel-group">
-      <el-col class="card-panel-col" style="float: left;width: calc(96% - 430px);margin: 0;">
-        <el-card class="welcome-card activeuser note">
-          <div slot="header" class="clearfix">
-            <span>今日活跃用户</span>
-          </div>
-
-          <div class="bg-color-sub" style="background: rgb(236, 245, 255) none repeat scroll 0% 0%;">
-            <div v-for="(item,index) in welcomeInitData.activeUsers" :key="item.user+index" class="bg-blue-sub-item" :style="getBck(index)">{{item.user}}</div>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-description">
-            <div class="card-panel-text">今日活跃</div>
-            <span data-v-6723c96e class="card-acuser-num">{{welcomeInitData.activeUserCount>9 ? welcomeInitData.activeUserCount:'0'+welcomeInitData.activeUserCount}}</span>
-          </div>
+  <div>
+    <el-row :gutter="20" class="m-3 d-flex flex-nowrap justify-content-around">
+      <el-card class="flex-fill">
+        <div class="clearfix" slot="header">
+          <span>今日活跃用户</span>
         </div>
-      </el-col>
-      <el-col class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-description">
-            <div class="card-panel-text">今日新增</div>
-            <span data-v-6723c96e class="card-acuser-num">{{lineChartDataIDS4.today>9 ? lineChartDataIDS4.today:'0'+lineChartDataIDS4.today}}</span>
-          </div>
+        <div class="bg-color-sub" style="background: rgb(236, 245, 255) none repeat scroll 0% 0%;">
+          <div
+            :key="item.user+index"
+            :style="getBck(index)"
+            class="bg-blue-sub-item"
+            v-for="(item,index) in welcomeInitData.activeUsers"
+          >{{item.user}}</div>
         </div>
-      </el-col>
-      <el-col class="card-panel-col">
-        <div class="card-panel extoday" @click="toLogs">
-          <div class="card-panel-description">
-            <div class="card-panel-text">今日异常</div>
-            <span data-v-6723c96e class="card-panel-num">{{welcomeInitData.errorCount >9 ? welcomeInitData.errorCount:'0'+welcomeInitData.errorCount}}</span>
-          </div>
+      </el-card>
+      <el-card class="ml-3" shadow="always" style="width:120px">
+        <div class="card-panel-text">今日活跃</div>
+        <span class="card-acuser-num">{{welcomeInitData.activeUserCount>9 ? welcomeInitData.activeUserCount:'0'+welcomeInitData.activeUserCount}}</span>
+      </el-card>
+      <el-card class="ml-3" shadow="always" style="width:120px">
+        <div class="card-panel-description">
+          <div class="card-panel-text">今日新增</div>
+          <span class="card-acuser-num">{{chartData.today>9 ? chartData.today:'0'+chartData.today}}</span>
         </div>
-      </el-col>
+      </el-card>
+      <el-card @click="toLogs" class="ml-3" style="width:120px">
+        <div class="card-panel-description">
+          <div class="card-panel-text">今日异常</div>
+          <span class="card-panel-num">{{welcomeInitData.errorCount >9 ? welcomeInitData.errorCount:'0'+welcomeInitData.errorCount}}</span>
+        </div>
+      </el-card>
     </el-row>
-    <el-card class="welcome-card note" style="width: calc(49% - 10px);margin-right: 10px;">
-      <div slot="header" class="clearfix">
-        <span>操作指南</span>
-      </div>
-      <div class="text item">
-        <i class="el-icon-edit"></i>、在vue.config.js中配置项目端口号，以及代理后端API项目域名。
-      </div>
-      <div class="text item">
-        <i class="el-icon-edit"></i>、在global.js中配置授权方案global.IS_IDS4。
-      </div>
-      <div class="text item">
-        <i class="el-icon-edit"></i>、动态添加页面以及权限配置，看右侧两个动图。
-      </div>
-      <div class="text item">
-        <i class="el-icon-edit"></i>、更多内容，查看官方文档：
-        <a href="http://vueadmin.neters.club/.doc/" target="_blank">http://vueadmin.neters.club/.doc/</a>。
-      </div>
-    </el-card>
-    <el-card class="welcome-card" style="width: 49%;margin: 0;font-size: 14px;">
-      <div slot="header" class="clearfix">
-        <span style="font-size: 16px;">服务器</span>
-      </div>
-      <div class="text item">环境变量：{{serverInfo.EnvironmentName}}</div>
-      <div class="text item">系统架构：{{serverInfo.OSArchitecture}}</div>
-      <div class="text item">ContentRootPath：{{serverInfo.ContentRootPath}}</div>
-      <div class="text item">WebRootPath：{{serverInfo.WebRootPath}}</div>
-      <div class="text item">.NET Core版本：{{serverInfo.FrameworkDescription}}</div>
-      <div class="text item">内存占用：{{serverInfo.MemoryFootprint}}</div>
-      <div class="text item">启动时间：{{serverInfo.WorkingTime}}</div>
-      <div>
-        <br />
-      </div>
-    </el-card>
-    <el-card class="welcome-card note" style="width: 98%;margin-top:20px;">
-      <div slot="header" class="clearfix">
-        <span>30天用户注册曲线图</span>
+    <el-card class="welcome-card note mx-3">
+      <div class="clearfix" slot="header">
+        <span>30天内接口访问情况</span>
       </div>
 
       <el-col :span="24" class="echarts-item">
-        <ve-line :data="lineChartDataIDS4" :extend="extend" :settings="lineChartSettings7Day" :mark-point="lineChartMarkPoint"></ve-line>
+        <ve-line :data="chartData" :extend="extend" :settings="chartSettings"></ve-line>
       </el-col>
     </el-card>
-    <el-card class="welcome-card" style="margin-top:20px;width: 98%;">
-      <div slot="header" class="clearfix">
-        <span>
-          访问日志
-          <span style="font-size:12px;">(Top 50 desc)</span>
-        </span>
+    <el-card class="welcome-card m-3">
+      <div class="clearfix" slot="header">
+        <span>访问日志</span>
       </div>
-      <el-table :data="welcomeInitData.logs" highlight-current-row border v-loading="listLoading" style="width: 100%;font-size: 12px;">
-        <el-table-column prop="User" label="访问者" width="150px" sortable></el-table-column>
-        <el-table-column prop="IP" label="请求地址" width="150px"></el-table-column>
-        <el-table-column prop="BeginTime" label="请求时间" width="150px"></el-table-column>
-        <el-table-column prop="API" label="访问接口" width></el-table-column>
-        <el-table-column prop="RequestMethod" label="Method" width="100px"></el-table-column>
-        <el-table-column prop="OPTime" label="响应时长" width="100px"></el-table-column>
-        <el-table-column prop="RequestData" label="参数" width></el-table-column>
-        <el-table-column prop="Agent" label="Agent" width="80" show-overflow-tooltip>
+      <el-table :data="logsData" border highlight-current-row style="width: 100%;font-size: 12px;" v-loading="isLogLoading">
+        <el-table-column label="访问者" prop="operater" sortable width="150px"></el-table-column>
+        <el-table-column label="请求地址" prop="ipAddress" width="150px"></el-table-column>
+        <el-table-column label="请求时间" prop="operateTime" width="150px"></el-table-column>
+        <el-table-column label="访问接口" prop="url" width></el-table-column>
+        <el-table-column label="请求方式" prop="httpMethod" width="100px"></el-table-column>
+        <el-table-column align="center" label="耗时(毫秒)" prop="elapsedTime" width="65"></el-table-column>
+        <el-table-column header-align="center" label="请求参数" prop="param"></el-table-column>
+        <el-table-column label="Agent" prop="agent" show-overflow-tooltip width="80">
           <template scope="scope">
-            <div style="text-decoration:underline;cursor:pointer;">{{ scope.row.Agent}}</div>
+            <div style="text-decoration:underline;cursor:pointer;">{{ scope.row.agent}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" header-align="center" label="执行成功" prop="isEnabled" width="90">
+          <template slot-scope="scope">
+            <el-tag :type="scope.row.success?'success':'danger'" disable-transitions>{{scope.row.success ? "成功":"失败"}}</el-tag>
           </template>
         </el-table-column>
       </el-table>
-
+      <div class="d-flex justify-content-end align-items-center">
+        <el-pagination
+          :current-page.sync="logQueryParam.PageIndex"
+          :page-size="logQueryParam.PageSize"
+          :total="logsTotalCount"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+          background
+          layout="prev, pager, next"
+        ></el-pagination>
+      </div>
       <br />
     </el-card>
 
-    <el-card class="welcome-card" style="margin-top: 20px;width: 98%;">
-      <div slot="header" class="clearfix">
+    <el-card class="mx-3">
+      <div class="clearfix" slot="header">
         <span>相关配置</span>
       </div>
-
       <el-aside>1、动态添加一个vue页面：</el-aside>
-
       <br />
-
       <div class="text item">
         <i class="el-icon-edit"></i>、更多内容，查看博客园文档：
-        <a href="https://www.cnblogs.com/laozhang-is-phi/p/10643993.html#autoid-2-6-0" target="_blank">https://www.cnblogs.com/laozhang-is-phi/p/10643993.html#autoid-2-6-0</a>。
+        <a
+          href="https://www.cnblogs.com/laozhang-is-phi/p/10643993.html#autoid-2-6-0"
+          target="_blank"
+        >https://www.cnblogs.com/laozhang-is-phi/p/10643993.html#autoid-2-6-0</a>。
       </div>
-
       <br />
       <hr />
       <br />
-
       <el-aside>2、快速配置接口权限：</el-aside>
-
       <br />
       <div style="height: 300px;overflow-y: auto;">
         <el-steps direction="vertical">
-          <el-step title="步骤 1" description="创建一个测试控制器 DemoController"></el-step>
-          <el-step title="步骤 2" description="修改接口路由地址，带上 [action] ，比如，/api/[controller]/[action]，编译是否正常"></el-step>
-          <el-step title="步骤 3" description="给需要加权限的路由api上，增加授权特性[[Authorize(Permissions.Name)]]"></el-step>
-          <el-step title="步骤 4" description="测试 /api/demo/get 接口，是否已经被保护"></el-step>
-          <el-step title="步骤 5.1" description="vueadmin 后台 配置权限：第一步：登录后台，新建api接口"></el-step>
-          <el-step title="步骤 5.2" description="第二步：添加一个菜单，可以是一个查询按钮，也可以是一个路由页面"></el-step>
-          <el-step title="步骤 5.3" description="第三步：权限分配！勾选角色和刚刚的菜单"></el-step>
-          <el-step title="步骤 6" description="如果后端netcore资源服务器有缓存，记得清理"></el-step>
-          <el-step title="步骤 7" description="重新登录Admin管理后台，访问接口，查看是否有权限"></el-step>
+          <el-step description="创建一个测试控制器 DemoController" title="步骤 1"></el-step>
+          <el-step description="修改接口路由地址，带上 [action] ，比如，/api/[controller]/[action]，编译是否正常" title="步骤 2"></el-step>
+          <el-step description="给需要加权限的路由api上，增加授权特性[[Authorize(Permissions.Name)]]" title="步骤 3"></el-step>
+          <el-step description="测试 /api/demo/get 接口，是否已经被保护" title="步骤 4"></el-step>
+          <el-step description="vueadmin 后台 配置权限：第一步：登录后台，新建api接口" title="步骤 5.1"></el-step>
+          <el-step description="第二步：添加一个菜单，可以是一个查询按钮，也可以是一个路由页面" title="步骤 5.2"></el-step>
+          <el-step description="第三步：权限分配！勾选角色和刚刚的菜单" title="步骤 5.3"></el-step>
+          <el-step description="如果后端netcore资源服务器有缓存，记得清理" title="步骤 6"></el-step>
+          <el-step description="重新登录Admin管理后台，访问接口，查看是否有权限" title="步骤 7"></el-step>
         </el-steps>
       </div>
-
-      <br />
-    </el-card>-->
+    </el-card>
   </div>
 </template>
 
 <script>
+import operatelogApi from '../api/admin/operatelog.js'
+// import VeLine from 'v-charts/lib/line.common'
 // import Vue from 'vue'
 // import VCharts from 'v-charts'
 // Vue.use(VCharts)
 
-// import applicationUserManager from '../auth/applicationusermanager'
-// import {
-//   getServerInfo,
-//   getActiveUsers
-// } from '../api/api'
-
 export default {
+
   name: 'Welcome',
+  // components: { VeLine },
   data() {
     return {
       listLoading: false,
       welcomeInitData: {},
+      logsData: [],
+      isLogLoading: false,
+      logsTotalCount: 0,
+      logQueryParam: {
+        pageIndex: 1,
+        pageSize: 5,
+        sortKey: '',
+        sortType: 0,
+        isWelCome: true
+      },
       serverInfo: {},
       extend: {
         series: {
@@ -172,26 +147,26 @@ export default {
           }
         }
       },
-      lineChartDataIDS4: {
+      chartData: {
         columns: [],
         rows: [],
         today: 0
       },
-      lineChartSettings7Day: {
+      // chartData: {
+      //   columns: ['日期', '访问用户', '下单用户', '下单率'],
+      //   rows: [
+      //     { 日期: '1/1', 访问用户: 1393, 下单用户: 1093, 下单率: 0.32 },
+      //     { 日期: '1/2', 访问用户: 3530, 下单用户: 3230, 下单率: 0.26 },
+      //     { 日期: '1/3', 访问用户: 2923, 下单用户: 2623, 下单率: 0.76 },
+      //     { 日期: '1/4', 访问用户: 1723, 下单用户: 1423, 下单率: 0.49 },
+      //     { 日期: '1/5', 访问用户: 3792, 下单用户: 3492, 下单率: 0.323 },
+      //     { 日期: '1/6', 访问用户: 4593, 下单用户: 4293, 下单率: 0.78 }
+      //   ]
+      // },
+      chartSettings: {
         metrics: ['count'],
-        dimension: ['date']
-      },
-      lineChartMarkPoint: {
-        data: [
-          {
-            name: '最大值',
-            type: 'max'
-          },
-          {
-            name: '最小值',
-            type: 'min'
-          }
-        ]
+        dimension: ['name'],
+        legendName: { 'count': '访问次数' }
       }
     }
   },
@@ -204,38 +179,35 @@ export default {
       this.$router.replace({
         path: '/Logs/Index'
       })
+    },
+    handleCurrentChange(val) {
+      this.logQueryParam.PageIndex = val
+      this.getList()
+    },
+    handleSizeChange(val) {
+      this.logQueryParam.PageSize = val
+      this.getList()
+    },
+    getLogsList() {
+      var that = this
+      operatelogApi.getPage(that.logQueryParam)
+        .then((res) => {
+          that.logsTotalCount = res.data.totalCount
+          that.logsData = res.data.items
+        })
+    },
+    getLineData() {
+      operatelogApi.getLineData()
+        .then(res => {
+          this.chartData = res.data
+        })
     }
   },
   mounted() {
-    // var curTime = new Date()
-    // if (window.localStorage.TokenExpire) {
-    //   var expiretime = new Date(Date.parse(window.localStorage.TokenExpire))
-    //   if (curTime >= expiretime) {
-    //     if (global.IS_IDS4) {
-    //       applicationUserManager.login()
-    //     } else {
-    //       this.$router.push('/login')
-    //     }
-    //   }
-    // } else {
-    //   if (global.IS_IDS4) {
-    //     applicationUserManager.login()
-    //   } else {
-    //     this.$router.push('/login')
-    //   }
-    // }
-
-    // // getAchieveUsers_IS4({}).then(res => {
-    // //   this.lineChartDataIDS4 = res.data.response
-    // // })
-
-    // getServerInfo({}).then(res => {
-    //   this.serverInfo = res.data.response
-    // })
-
-    // getActiveUsers({}).then(res => {
-    //   this.welcomeInitData = res.data.response
-    // })
+  },
+  created() {
+    this.getLogsList()
+    this.getLineData()
   }
 }
 </script>

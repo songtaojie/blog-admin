@@ -5,5 +5,8 @@ export default {
   // 分页列表
   getPage(data) {
     return request.post(`${routePrefix}/getpage`, data)
+  },
+  getLineData() {
+    return request.post(`${routePrefix}/getLineData`)
   }
 }
