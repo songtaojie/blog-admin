@@ -37,7 +37,7 @@
   </div>
 </template>
 <script>
-import blogApi from '../../api/blog'
+import blogApi from '../../api/admin/blogmanage.js'
 export default {
   data() {
     return {

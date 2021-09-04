@@ -66,11 +66,14 @@ export const constRouterMap = [
   // ...modules
 ]
 
-const router = new VueRouter({
+
+const createRouter = () => new VueRouter({
   // mode: 'history',
   // base: process.env.BASE_URL,
   routes: constRouterMap
 })
+
+const router = createRouter()
 
 /**
  * 登录页面跳转
@@ -97,6 +100,13 @@ export function signIn(next) {
     }
   }
 }
+
+export function resetRouter() {
+  const newRouter = createRouter()
+  router.matcher = newRouter.matcher // the relevant part
+}
+
+
 /**
  * 路由跳转前的钩子函数
  */
@@ -113,6 +123,7 @@ router.beforeEach((to, from, next) => {
     if (store.getters.auth.isAuthenticated) {
       if (!store.getters.permission_IsAddRoute) {
         store.dispatch('GenerateRoutes').then((routes) => { // 根据roles权限生成可访问的路由表
+          resetRouter()
           router.addRoutes(routes) // 动态添加可访问路由表
           store.commit('SET_ISADDROUTE', true)
           next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
@@ -125,6 +136,7 @@ router.beforeEach((to, from, next) => {
     }
   }
 })
+
 
 
 export default router
