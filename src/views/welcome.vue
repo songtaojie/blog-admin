@@ -45,18 +45,14 @@
         <span>访问日志</span>
       </div>
       <el-table :data="logsData" border highlight-current-row style="width: 100%;font-size: 12px;" v-loading="isLogLoading">
-        <el-table-column label="访问者" prop="operater" sortable width="150px"></el-table-column>
-        <el-table-column label="请求地址" prop="ipAddress" width="150px"></el-table-column>
-        <el-table-column label="请求时间" prop="operateTime" width="150px"></el-table-column>
-        <el-table-column label="访问接口" prop="url" width></el-table-column>
-        <el-table-column label="请求方式" prop="httpMethod" width="100px"></el-table-column>
+        <el-table-column align="center" label="访问者" prop="operater" width="100px"></el-table-column>
+        <el-table-column align="center" label="请求地址" prop="ipAddress" width="100px"></el-table-column>
+        <el-table-column align="center" label="请求时间" prop="operateTime" width="135px"></el-table-column>
+        <el-table-column header-align="center" label="访问接口" prop="url" width="250"></el-table-column>
+        <el-table-column align="center" label="请求方式" prop="httpMethod" width="65"></el-table-column>
         <el-table-column align="center" label="耗时(毫秒)" prop="elapsedTime" width="65"></el-table-column>
-        <el-table-column header-align="center" label="请求参数" prop="param"></el-table-column>
-        <el-table-column label="Agent" prop="agent" show-overflow-tooltip width="80">
-          <template scope="scope">
-            <div style="text-decoration:underline;cursor:pointer;">{{ scope.row.agent}}</div>
-          </template>
-        </el-table-column>
+        <el-table-column header-align="center" label="请求参数" prop="param" show-overflow-tooltip></el-table-column>
+        <el-table-column header-align="center" label="Agent" prop="agent" show-overflow-tooltip width="180"></el-table-column>
         <el-table-column align="center" header-align="center" label="执行成功" prop="isEnabled" width="90">
           <template slot-scope="scope">
             <el-tag :type="scope.row.success?'success':'danger'" disable-transitions>{{scope.row.success ? "成功":"失败"}}</el-tag>
@@ -182,11 +178,11 @@ export default {
     },
     handleCurrentChange(val) {
       this.logQueryParam.PageIndex = val
-      this.getList()
+      this.getLogsList()
     },
     handleSizeChange(val) {
       this.logQueryParam.PageSize = val
-      this.getList()
+      this.getLogsList()
     },
     getLogsList() {
       var that = this
