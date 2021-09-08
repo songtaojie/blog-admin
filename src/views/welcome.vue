@@ -1,36 +1,5 @@
 <template>
   <div>
-    <el-row :gutter="20" class="m-3 d-flex flex-nowrap justify-content-around">
-      <el-card class="flex-fill">
-        <div class="clearfix" slot="header">
-          <span>今日活跃用户</span>
-        </div>
-        <div class="bg-color-sub" style="background: rgb(236, 245, 255) none repeat scroll 0% 0%;">
-          <div
-            :key="item.user+index"
-            :style="getBck(index)"
-            class="bg-blue-sub-item"
-            v-for="(item,index) in welcomeInitData.activeUsers"
-          >{{item.user}}</div>
-        </div>
-      </el-card>
-      <el-card class="ml-3" shadow="always" style="width:120px">
-        <div class="card-panel-text">今日活跃</div>
-        <span class="card-acuser-num">{{welcomeInitData.activeUserCount>9 ? welcomeInitData.activeUserCount:'0'+welcomeInitData.activeUserCount}}</span>
-      </el-card>
-      <el-card class="ml-3" shadow="always" style="width:120px">
-        <div class="card-panel-description">
-          <div class="card-panel-text">今日新增</div>
-          <span class="card-acuser-num">{{chartData.today>9 ? chartData.today:'0'+chartData.today}}</span>
-        </div>
-      </el-card>
-      <el-card @click="toLogs" class="ml-3" style="width:120px">
-        <div class="card-panel-description">
-          <div class="card-panel-text">今日异常</div>
-          <span class="card-panel-num">{{welcomeInitData.errorCount >9 ? welcomeInitData.errorCount:'0'+welcomeInitData.errorCount}}</span>
-        </div>
-      </el-card>
-    </el-row>
     <el-card class="welcome-card note mx-3">
       <div class="clearfix" slot="header">
         <span>30天内接口访问情况</span>
@@ -109,18 +78,16 @@
 </template>
 
 <script>
-import operatelogApi from '../api/admin/operatelog.js'
-// import VeLine from 'v-charts/lib/line.common'
-// import Vue from 'vue'
-// import VCharts from 'v-charts'
-// Vue.use(VCharts)
-
+import VeLine from 'v-charts/lib/line.common'
+import homeApi from '../api/admin/home'
+import * as signalR from '@aspnet/signalr'
 export default {
 
   name: 'Welcome',
-  // components: { VeLine },
+  components: { VeLine },
   data() {
     return {
+      baseUrl: process.env.VUE_APP_BASE_API,
       listLoading: false,
       welcomeInitData: {},
       logsData: [],
@@ -163,18 +130,14 @@ export default {
         metrics: ['count'],
         dimension: ['name'],
         legendName: { 'count': '访问次数' }
-      }
+      },
+      connection: ''
     }
   },
   methods: {
     getBck(index) {
       return `background: rgb(${43 + index * 20}, ${148 +
         index * 10}, 255) none repeat scroll 0% 0%;`
-    },
-    toLogs() {
-      this.$router.replace({
-        path: '/Logs/Index'
-      })
     },
     handleCurrentChange(val) {
       this.logQueryParam.PageIndex = val
@@ -186,24 +149,59 @@ export default {
     },
     getLogsList() {
       var that = this
-      operatelogApi.getPage(that.logQueryParam)
+      homeApi.getLogsPage(that.logQueryParam)
         .then((res) => {
           that.logsTotalCount = res.data.totalCount
           that.logsData = res.data.items
         })
     },
     getLineData() {
-      operatelogApi.getLineData()
+      homeApi.getLineData()
         .then(res => {
           this.chartData = res.data
         })
+    },
+    buildConnection() {
+      var that = this
+      // 1、首先我们实例化一个连接器
+      this.connection = new signalR.HubConnectionBuilder()
+        // 然后配置通道路由
+        .withUrl(`${that.baseUrl}/api/chathub`, {
+          accessTokenFactory: () => that.$store.getters.auth.access_token
+        })
+        // 日志信息
+        .configureLogging(signalR.LogLevel.Information)
+        // 创建
+        .build()
+
+      // 开始通讯，并成功呼叫服务器
+      that.connection.start().then(() => {
+        // that.connection.invoke('GetLatestCount', '2222').catch(function (err) {
+        //   return console.error(err)
+        // })
+
+        // that.connection.invoke('SendMessage', this.$store.getters.user.userId, '哈哈哈哈').catch(function (err) {
+        //   return console.error(err)
+        // })
+        console.log('连接成功')
+      })
+
+      that.connection.on('ReceiveUpdate', function (update) {
+        console.info('update ReceiveUpdate success!', update)
+        // that.tableData = update;//将返回的数据，实时的赋值给当前页面的 data 中；
+      })
+
+      that.connection.on('ReceiveMessage', function (update, message) {
+        debugger
+        console.info('update ReceiveMessage success!', update, message)
+        // that.tableData = update;//将返回的数据，实时的赋值给当前页面的 data 中；
+      })
     }
-  },
-  mounted() {
   },
   created() {
     this.getLogsList()
     this.getLineData()
+    this.buildConnection()
   }
 }
 </script>

@@ -13,7 +13,7 @@ const sessionStoragePlugin = store => {
     localStorage.setItem(AUTH_KEY, JSON.stringify(state.auth))
     localStorage.setItem(TOKEN_KEY, state.auth.access_token)
     if (mutation.type === 'CLEAR_AUTH') {
-      localStorage.clear()
+      // localStorage.clear()
       sessionStorage.clear()
     }
   })

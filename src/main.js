@@ -33,9 +33,6 @@ Vue.use(mavonEditor)
 import permission from './directive/permission'
 Vue.use(permission)
 
-import VeLine from 'v-charts/lib/line.common'
-Vue.component(VeLine.name, VeLine)
-
 const vue = new Vue({
   store,
   router,
