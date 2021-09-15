@@ -12,8 +12,14 @@ export default {
   getDetail(id) {
     return request.get(`${routePrefix}/get/${id}`)
   },
+  getCurrentUserInfo() {
+    return request.get(`${routePrefix}/GetCurrentUserInfo`)
+  },
   update(data) {
     return request.post(`${routePrefix}/Update`, data)
+  },
+  updateMyInfo(data) {
+    return request.post(`${routePrefix}/UpdateMyInfo`, data)
   },
   del(id) {
     return request.del(`${routePrefix}/Delete/${id}`)

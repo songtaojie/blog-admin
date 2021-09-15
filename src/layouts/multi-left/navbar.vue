@@ -6,6 +6,7 @@
         <i class="el-icon-arrow-down el-icon--right"></i>
       </el-button>
       <el-dropdown-menu slot="dropdown" style="min-width: 8rem;">
+        <el-dropdown-item command="/user/setting">个人设置</el-dropdown-item>
         <el-dropdown-item command="logout">注销</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
@@ -47,6 +48,8 @@ export default {
             that.$store.commit('CLEAR_ROUTERS')
             that.$router.push('/login')
           })
+      } else {
+        that.$router.push(command)
       }
     }
 

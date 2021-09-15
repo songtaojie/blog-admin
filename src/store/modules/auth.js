@@ -55,6 +55,14 @@ const auth = {
     UPDATE_TOKEN(state, accessToken) {
       state.access_token = accessToken
     },
+    /**
+     * 更新编辑器
+     * @param {*} state 状态
+     * @param {*} isUseMdEdit true：使用md编辑器，false：使用ckeditor编辑器
+     */
+    UPDATE_EDITOR(state, isUseMdEdit) {
+      state.isUseMdEdit = isUseMdEdit
+    },
     UPDATE_EXPIRES(state, expiresIn) {
       state.expires_in = expiresIn
       var expiresInInt = window.parseInt(expiresIn)

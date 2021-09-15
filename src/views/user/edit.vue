@@ -1,7 +1,7 @@
 <template>
   <el-drawer :before-close="onBeforeClose" :title="isAdd?'添加用户':'编辑用户'" :visible.sync="visible" @open="onDrawerOpen" ref="drawerRef" size="35%">
     <div class="d-flex flex-column p-4 h-100">
-      <el-form :model="formData" :rules="rules" @submit.stop.prevent="onSubmit" class="flex-fill" label-width="85px" ref="ruleForm">
+      <el-form :model="formData" :rules="rules" @submit.stop.prevent="onSubmit" class="flex-fill" label-width="90px" ref="ruleForm">
         <el-form-item label="用户名称:" prop="userName">
           <el-input :disabled="!isAdd" autocomplete="off" placeholder="请输入用户名" v-model="formData.userName"></el-input>
         </el-form-item>
@@ -58,6 +58,9 @@
         </el-form-item>
         <el-form-item label="是否锁定:" prop="lock">
           <el-switch active-value="Y" inactive-value="N" v-model="formData.lock"></el-switch>
+        </el-form-item>
+        <el-form-item label="默认编辑器:" prop="useMdEdit">
+          <el-switch active-text="Md编辑器" active-value="Y" inactive-text="富文本编辑器" inactive-value="N" v-model="formData.useMdEdit"></el-switch>
         </el-form-item>
       </el-form>
       <div class="d-flex">
@@ -119,7 +122,8 @@ export default {
         passWord: '',
         nickName: '',
         avatarUrl: '',
-        lock: false
+        lock: false,
+        useMdEdit: 'N'
       },
       menuTreeProps: {
         checkStrictly: false,

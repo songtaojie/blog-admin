@@ -28,6 +28,16 @@ export const constRouterMap = [
     }
   },
   {
+    name: 'usersetting',
+    path: '/user/setting',
+    component: () => import('@/views/user/setting.vue'),
+    hidden: true,
+    meta: {
+      title: '个人设置',
+      requireAuth: true
+    }
+  },
+  {
     name: 'login',
     path: '/login/:redirect?',
     component: () => import('@/views/login.vue'),

@@ -133,7 +133,7 @@ export default {
     HxSelect
   },
   data() {
-    var useMdEdit = this.$route.params.useMdEdit
+    var isUseMdEdit = this.$store.getters.user.isUseMdEdit
     return {
       title: '写博客-海·星の博客',
       attachHeaders: {
@@ -146,10 +146,10 @@ export default {
       loading: false,
       tagSelected: [],
       attachApi: process.env.VUE_APP_ATTACH_API,
-      isUseMdEdit: useMdEdit === true, // 是否是markdown编辑器
+      isUseMdEdit: isUseMdEdit === true, // 是否是markdown编辑器
       formData: {
         id: '',
-        markDown: useMdEdit ? 'Y' : 'N',
+        markDown: isUseMdEdit ? 'Y' : 'N',
         blogTypeId: null,
         categoryId: null,
         coverImgUrl: '',
@@ -197,9 +197,7 @@ export default {
               .then(() => {
                 debugger
                 that.loading = false
-                that.$router.push({
-                  name: 'list'
-                })
+                that.$router.push('/blog/list')
               }).catch(() => {
                 that.loading = false
               })
@@ -207,9 +205,7 @@ export default {
             blogApi.update(that.formData)
               .then(() => {
                 that.loading = false
-                that.$router.push({
-                  name: 'list'
-                })
+                that.$router.push('/blog/list')
               })
               .catch(() => {
                 that.loading = false
