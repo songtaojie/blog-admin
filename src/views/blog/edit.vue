@@ -120,7 +120,7 @@
 
 <script>
 import HxInput from '@/components/HxInput.vue'
-import { guid, isEmpty } from '../../common/index'
+import { guid, isEmpty, formHex } from '../../common/index'
 import HxSelect from '@/components/HxSelect.vue'
 import blogApi from '../../api/admin/blogmanage.js'
 import { TOKEN_TYPE } from '../../common/constkey'
@@ -364,9 +364,12 @@ export default {
   },
   created: function () {
     this.getBlogTagList()
-    const id = this.$route.params.id
-    if (!isEmpty(id)) {
-      this.getDetail(id)
+    if (!isEmpty(this.$route.query.p)) {
+      var param = formHex(this.$route.query.p, true)
+      if (!isEmpty(param.id)) {
+        this.isUseMdEdit = param.isMarkDown
+        this.getDetail(param.id)
+      }
     }
   }
 }

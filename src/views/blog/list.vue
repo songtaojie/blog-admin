@@ -38,6 +38,7 @@
 </template>
 <script>
 import blogApi from '../../api/admin/blogmanage.js'
+import { toHex } from '../../common'
 export default {
   data() {
     return {
@@ -53,11 +54,14 @@ export default {
   },
   methods: {
     handleEdit(row) {
+      var p = toHex({
+        id: row.id,
+        isMarkDown: row.isMarkDown
+      }, true)
       this.$router.push({
-        name: 'edit',
-        params: {
-          id: row.id,
-          useMdEdit: row.MarkDown === 'Y'
+        path: '/blog/edit',
+        query: {
+          p
         }
       })
     },
