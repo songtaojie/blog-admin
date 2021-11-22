@@ -166,7 +166,7 @@ export default {
       // 1、首先我们实例化一个连接器
       this.connection = new signalR.HubConnectionBuilder()
         // 然后配置通道路由
-        .withUrl(`${that.baseUrl}/api/chathub`, {
+        .withUrl(`${that.baseUrl}/chathub`, {
           accessTokenFactory: () => that.$store.getters.auth.access_token
         })
         // 日志信息
