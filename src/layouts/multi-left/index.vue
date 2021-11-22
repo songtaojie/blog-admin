@@ -21,7 +21,6 @@ export default {
     theme: String
   },
   data() {
-    // debugger
     // var menus = this.$store.getters.permission.routers
     return {
       // menus: menus,

@@ -195,7 +195,6 @@ export default {
           if (isEmpty(that.formData.id)) {
             blogApi.add(that.formData)
               .then(() => {
-                debugger
                 that.loading = false
                 that.$router.push('/blog/list')
               }).catch(() => {

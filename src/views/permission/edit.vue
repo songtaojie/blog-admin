@@ -164,7 +164,6 @@ export default {
       var that = this
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
-          debugger
           that.loading = true
           that.formData.parentId = ''
           if (that.parentMenuIds.length > 0) {

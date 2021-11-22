@@ -48,29 +48,19 @@
       </div>
       <el-aside>1、动态添加一个vue页面：</el-aside>
       <br />
-      <div class="text item">
-        <i class="el-icon-edit"></i>、更多内容，查看博客园文档：
-        <a
-          href="https://www.cnblogs.com/laozhang-is-phi/p/10643993.html#autoid-2-6-0"
-          target="_blank"
-        >https://www.cnblogs.com/laozhang-is-phi/p/10643993.html#autoid-2-6-0</a>。
-      </div>
-      <br />
       <hr />
       <br />
       <el-aside>2、快速配置接口权限：</el-aside>
       <br />
       <div style="height: 300px;overflow-y: auto;">
         <el-steps direction="vertical">
-          <el-step description="创建一个测试控制器 DemoController" title="步骤 1"></el-step>
-          <el-step description="修改接口路由地址，带上 [action] ，比如，/api/[controller]/[action]，编译是否正常" title="步骤 2"></el-step>
-          <el-step description="给需要加权限的路由api上，增加授权特性[[Authorize(Permissions.Name)]]" title="步骤 3"></el-step>
-          <el-step description="测试 /api/demo/get 接口，是否已经被保护" title="步骤 4"></el-step>
-          <el-step description="vueadmin 后台 配置权限：第一步：登录后台，新建api接口" title="步骤 5.1"></el-step>
-          <el-step description="第二步：添加一个菜单，可以是一个查询按钮，也可以是一个路由页面" title="步骤 5.2"></el-step>
-          <el-step description="第三步：权限分配！勾选角色和刚刚的菜单" title="步骤 5.3"></el-step>
-          <el-step description="如果后端netcore资源服务器有缓存，记得清理" title="步骤 6"></el-step>
-          <el-step description="重新登录Admin管理后台，访问接口，查看是否有权限" title="步骤 7"></el-step>
+          <el-step description="创建一个测试控制器 TestController，继承基础控制器BaseAdminController" title="步骤 1"></el-step>
+          <el-step description="测试 /api/Test/get 接口，是否已经被保护" title="步骤 2"></el-step>
+          <el-step description="vueadmin 后台 配置权限：第一步：登录后台，新建api接口" title="步骤 3.1"></el-step>
+          <el-step description="第二步：添加一个菜单，可以是一个查询按钮，也可以是一个路由页面" title="步骤 3.2"></el-step>
+          <el-step description="第三步：权限分配！勾选角色和刚刚的菜单" title="步骤 3.3"></el-step>
+          <el-step description="如果后端netcore资源服务器有缓存，记得清理" title="步骤 4"></el-step>
+          <el-step description="重新登录Admin管理后台，访问接口，查看是否有权限" title="步骤 5"></el-step>
         </el-steps>
       </div>
     </el-card>
@@ -176,9 +166,9 @@ export default {
 
       // 开始通讯，并成功呼叫服务器
       that.connection.start().then(() => {
-        // that.connection.invoke('GetLatestCount', '2222').catch(function (err) {
-        //   return console.error(err)
-        // })
+        that.connection.invoke('ReceiveUpdate', '2222').catch(function (err) {
+          return console.error(err)
+        })
 
         // that.connection.invoke('SendMessage', this.$store.getters.user.userId, '哈哈哈哈').catch(function (err) {
         //   return console.error(err)
@@ -192,7 +182,6 @@ export default {
       })
 
       that.connection.on('ReceiveMessage', function (update, message) {
-        debugger
         console.info('update ReceiveMessage success!', update, message)
         // that.tableData = update;//将返回的数据，实时的赋值给当前页面的 data 中；
       })

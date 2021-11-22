@@ -48,14 +48,14 @@
 </template>
 <script>
 import { authorize } from '../api/admin/oauth2.js'
-import { ajaxError } from '../api/http.js'
 export default {
   data() {
+    var isDev = process.env.NODE_ENV === 'development'
     return {
       isLoading: false,
       form: {
-        username: 'SuperAdmin',
-        password: '123456',
+        username: isDev ? 'SuperAdmin' : '',
+        password: isDev ? '123456' : '',
         remember: false
       },
       rules: {

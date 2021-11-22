@@ -253,7 +253,6 @@ axios.interceptors.response.use(
     // var tokenExpired = res.headers['token-expired']
     // var isRefreshApi = res.config.url.indexOf(REFRESH_TOKEN_API.toLocaleLowerCase()) >= 0
     // var isRetryRequest = res.config.__isRetryRequest
-    // debugger
     // if ((tokenExpired === 'true' || tokenExpired === true) && !isRefreshApi && !isRetryRequest) {
     //   handle401Error(res.config)
     // }

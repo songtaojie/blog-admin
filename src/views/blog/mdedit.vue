@@ -99,7 +99,6 @@ export default {
       // axios.post('/api/attach/upload', formdata, {
       //   'Content-Type':'multipart/form-data'
       // }).then(res => {
-      //   debugger
       //   console.log(res)
       // })
     },
