@@ -28,7 +28,7 @@
       <el-table-column header-align="center" label="操作" width="180">
         <template slot-scope="scope">
           <el-button @click="handleEdit(scope.row)" size="mini" v-permission="permission.edit">编辑</el-button>
-          <el-button @click="handleDelete(scope.row)" size="mini" type="danger" v-permission="permission.del">删除</el-button>
+          <el-button :disabled="scope.row.isSystem" @click="handleDelete(scope.row)" size="mini" type="danger" v-permission="permission.del">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -47,6 +47,7 @@ export default {
   data() {
     return {
       EnabledIDS4,
+      excludeCode: ['menu'],
       permission,
       tableData: [],
       isLoading: false,
