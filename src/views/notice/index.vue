@@ -2,14 +2,9 @@
   <div class="p-2 text-left">
     <el-button @click="handleAdd" class="mb-2">添加</el-button>
     <el-table :data="tableData" border>
-      <el-table-column header-align="center" label="网站名称" prop="siteName" width="250"></el-table-column>
-      <el-table-column header-align="center" label="网站logo" prop="logo" width="200">
-        <template slot-scope="scope">
-          <el-image :src="scope.row.logo" v-if="!isEmpty(scope.row.logo)"></el-image>
-          <span v-else>-</span>
-        </template>
-      </el-table-column>
-      <el-table-column header-align="center" label="网站链接" prop="link"></el-table-column>
+      <el-table-column header-align="center" label="通知内容" prop="content" width="220"></el-table-column>
+      <el-table-column header-align="center" label="链接" prop="link" width="200"></el-table-column>
+      <el-table-column header-align="center" label="跳转方式" prop="target" width="200"></el-table-column>
       <el-table-column header-align="center" label="状态" prop="isEnabled" width="80">
         <template slot-scope="scope">
           <el-switch disabled v-model="scope.row.isEnabled"></el-switch>
@@ -37,7 +32,6 @@
   </div>
 </template>
 <script>
-import { isEmpty } from '../../common/index'
 import adminapi from '../../api/admin/adminapi'
 import FriendLinkEdit from './edit.vue'
 export default {
@@ -60,7 +54,6 @@ export default {
     }
   },
   methods: {
-    isEmpty,
     oncloseDrawer() {
       this.drawer = false
     },
@@ -74,7 +67,7 @@ export default {
     },
     handleDelete(row) {
       const that = this
-      that.$confirm('确定要删除该友情链接?', '提示', {
+      that.$confirm('确定要删除该通知公告?', '提示', {
         type: 'warning',
         confirmButtonText: '确认',
         cancelButtonText: '取消'
