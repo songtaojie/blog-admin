@@ -3,7 +3,7 @@
     <div class="d-flex flex-column p-4 h-100">
       <el-form :model="formData" :rules="rules" @submit.stop.prevent="onSubmit" class="flex-fill" label-width="85px" ref="ruleForm">
         <el-form-item label="通知内容" prop="content">
-          <el-input autocomplete="off" placeholder="请输入通知公告内容" v-model="formData.content"></el-input>
+          <el-input :rows="2" placeholder="请输入通知公告内容" type="textarea" v-model="formData.content"></el-input>
         </el-form-item>
         <el-form-item label="链接:" prop="link">
           <el-input placeholder="请输入跳转链接" required v-model="formData.link"></el-input>
@@ -17,7 +17,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="序号:" prop="orderIndex">
-          <el-input placeholder="请输入序号" type="number" v-model="formData.orderIndex"></el-input>
+          <el-input placeholder="请输入序号" type="number" v-model.number="formData.orderIndex"></el-input>
         </el-form-item>
         <el-form-item label="是否启用:" prop="isEnabled">
           <el-switch v-model="formData.isEnabled"></el-switch>
@@ -33,7 +33,7 @@
 
 <script>
 import { isEmpty } from '../../common/index'
-import adminapi from '../../api/admin/adminapi'
+import { noticeApi } from '../../api/admin/adminapi'
 export default {
   props: {
     visible: {
@@ -59,21 +59,19 @@ export default {
         isEnabled: true
       },
       rules: {
-        siteName: [
-          { required: true, message: '请输入网站名称', trigger: 'blur' }
-        ],
-        link: [
-          { required: true, message: '请输入网站链接', trigger: 'blur' }
+        content: [
+          { required: true, message: '请输入通知内容', trigger: 'blur' }
         ]
       }
     }
   },
   methods: {
+    isEmpty,
     onSubmit() {
       var that = this
       if (isEmpty(that.id)) {
         that.loading = true
-        adminapi.friendLink.add(that.formData)
+        noticeApi.add(that.formData)
           .then(() => {
             that.loading = false
             that.onSaveSuccess()
@@ -84,7 +82,7 @@ export default {
           })
       } else {
         that.loading = true
-        adminapi.friendLink.update(that.formData)
+        noticeApi.update(that.formData)
           .then(() => {
             that.loading = false
             that.onSaveSuccess()
@@ -100,7 +98,7 @@ export default {
     },
     getDetail(id) {
       var that = this
-      adminapi.friendLink.getDetail(id)
+      noticeApi.getDetail(id)
         .then(res => {
           that.formData = res.data
         })

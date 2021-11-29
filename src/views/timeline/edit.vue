@@ -1,24 +1,15 @@
 <template>
-  <el-drawer :before-close="onBeforeClose" :title="isAdd?'添加友情链接':'编辑友情链接'" :visible.sync="visible" @open="onDrawerOpen" ref="drawer" size="35%">
+  <el-drawer :before-close="onBeforeClose" :title="isAdd?'添加时间轴':'编辑时间轴'" :visible.sync="visible" @open="onDrawerOpen" ref="drawer" size="35%">
     <div class="d-flex flex-column p-4 h-100">
       <el-form :model="formData" :rules="rules" @submit.stop.prevent="onSubmit" class="flex-fill" label-width="85px" ref="ruleForm">
-        <el-form-item label="网站名称" prop="siteName">
-          <el-input autocomplete="off" placeholder="请输入网站名称" v-model="formData.siteName"></el-input>
+        <el-form-item label="内容" prop="content">
+          <el-input :rows="2" placeholder="请输入内容" type="textarea" v-model="formData.content"></el-input>
         </el-form-item>
-        <el-form-item label="网站code" prop="siteCode">
-          <el-input autocomplete="off" placeholder="请输入网站Code" v-model="formData.siteCode"></el-input>
-        </el-form-item>
-        <el-form-item label="网站链接:" prop="link">
-          <el-input placeholder="请输入网站链接" required v-model="formData.link"></el-input>
+        <el-form-item label="跳转链接:" prop="link">
+          <el-input placeholder="请输入跳转链接" required v-model="formData.link"></el-input>
         </el-form-item>
         <el-form-item label="序号:" prop="orderIndex">
           <el-input placeholder="请输入序号" type="number" v-model="formData.orderIndex"></el-input>
-        </el-form-item>
-        <el-form-item label="网站logo:" prop="logo">
-          <el-upload :action="attachApi + '/api/attach/upload'" :data="attachData" :file-list="logoList" :limit="1" :on-success="onAttachSuccess">
-            <el-button size="small" type="primary">上传logo</el-button>
-            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-          </el-upload>
         </el-form-item>
         <el-form-item label="是否启用:" prop="isEnabled">
           <el-switch v-model="formData.isEnabled"></el-switch>
@@ -34,7 +25,7 @@
 
 <script>
 import { isEmpty } from '../../common/index'
-import { friendLinkApi } from '../../api/admin/adminapi'
+import { timelineApi } from '../../api/admin/adminapi'
 export default {
   props: {
     visible: {
@@ -49,24 +40,16 @@ export default {
   data() {
     return {
       loading: false,
-      attachApi: process.env.VUE_APP_ATTACH_API,
       formData: {
         id: '',
-        siteCode: '',
-        siteName: '',
+        content: '',
         link: '',
         orderIndex: 0,
-        logo: '',
         isEnabled: true
       },
-      logoList: [
-      ],
       rules: {
-        siteName: [
-          { required: true, message: '请输入网站名称', trigger: 'blur' }
-        ],
-        siteCode: [
-          { required: true, message: '请输入网站code', trigger: 'blur' }
+        content: [
+          { required: true, message: '请输入内容', trigger: 'blur' }
         ]
       }
     }
@@ -76,7 +59,7 @@ export default {
       var that = this
       if (isEmpty(that.id)) {
         that.loading = true
-        friendLinkApi.add(that.formData)
+        timelineApi.add(that.formData)
           .then(() => {
             that.loading = false
             that.onSaveSuccess()
@@ -87,7 +70,7 @@ export default {
           })
       } else {
         that.loading = true
-        friendLinkApi.update(that.formData)
+        timelineApi.update(that.formData)
           .then(() => {
             that.loading = false
             that.onSaveSuccess()
@@ -103,7 +86,7 @@ export default {
     },
     getDetail(id) {
       var that = this
-      friendLinkApi.getDetail(id)
+      timelineApi.getDetail(id)
         .then(res => {
           that.formData = res.data
         })
@@ -120,30 +103,11 @@ export default {
     },
     onSaveSuccess() {
       this.$emit('success')
-    },
-    onAttachSuccess(response, file, fileList) {
-      var that = this
-      if (response && response.success === 1) {
-        that.logoList = fileList
-        that.formData.logo = response.url
-      } else {
-        that.$message({
-          message: response.message,
-          type: 'error'
-        })
-      }
     }
   },
   computed: {
     isAdd() {
       return isEmpty(this.id)
-    },
-    attachData() {
-      var attachData = {
-        path: 'logo/'
-      }
-      if (!isEmpty(this.formData.siteCode)) attachData.fileName = this.formData.siteCode
-      return attachData
     },
     showdrawer() {
       return this.visible

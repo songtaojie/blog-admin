@@ -5,7 +5,7 @@
       <el-table-column header-align="center" label="网站名称" prop="siteName" width="250"></el-table-column>
       <el-table-column header-align="center" label="网站logo" prop="logo" width="200">
         <template slot-scope="scope">
-          <el-image :src="scope.row.logo" v-if="!isEmpty(scope.row.logo)"></el-image>
+          <el-image :src="scope.row.logo" style="width:40px" v-if="!isEmpty(scope.row.logo)"></el-image>
           <span v-else>-</span>
         </template>
       </el-table-column>
@@ -38,7 +38,7 @@
 </template>
 <script>
 import { isEmpty } from '../../common/index'
-import adminapi from '../../api/admin/adminapi'
+import { friendLinkApi } from '../../api/admin/adminapi'
 import FriendLinkEdit from './edit.vue'
 export default {
   components: {
@@ -79,7 +79,7 @@ export default {
         confirmButtonText: '确认',
         cancelButtonText: '取消'
       }).then(() => {
-        adminapi.friendLink.del(row.id).then(() => {
+        friendLinkApi.del(row.id).then(() => {
           that.getList()
         })
       })
@@ -97,7 +97,7 @@ export default {
     },
     getList() {
       var that = this
-      adminapi.friendLink.getPage(that.queryParam)
+      friendLinkApi.getPage(that.queryParam)
         .then((res) => {
           that.totalCount = res.data.totalCount
           that.tableData = res.data.items

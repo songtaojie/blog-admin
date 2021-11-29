@@ -1,24 +1,25 @@
 <template>
-  <el-drawer :before-close="onBeforeClose" :title="isAdd?'添加友情链接':'编辑友情链接'" :visible.sync="visible" @open="onDrawerOpen" ref="drawer" size="35%">
+  <el-drawer :before-close="onBeforeClose" :title="isAdd?'添加首页横幅':'编辑首页横幅'" :visible.sync="visible" @open="onDrawerOpen" ref="drawer" size="35%">
     <div class="d-flex flex-column p-4 h-100">
       <el-form :model="formData" :rules="rules" @submit.stop.prevent="onSubmit" class="flex-fill" label-width="85px" ref="ruleForm">
-        <el-form-item label="网站名称" prop="siteName">
-          <el-input autocomplete="off" placeholder="请输入网站名称" v-model="formData.siteName"></el-input>
+        <el-form-item label="标题:" prop="title">
+          <el-input autocomplete="off" placeholder="请输入标题" v-model="formData.title"></el-input>
         </el-form-item>
-        <el-form-item label="网站code" prop="siteCode">
-          <el-input autocomplete="off" placeholder="请输入网站Code" v-model="formData.siteCode"></el-input>
+        <el-form-item label="图片:" prop="imgUrl">
+          <el-upload :action="attachApi + '/api/attach/upload'" :limit="1" :on-success="onAttachSuccess" drag>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">
+              将文件拖到此处，或
+              <em>点击上传</em>
+            </div>
+            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过2M</div>
+          </el-upload>
         </el-form-item>
         <el-form-item label="网站链接:" prop="link">
           <el-input placeholder="请输入网站链接" required v-model="formData.link"></el-input>
         </el-form-item>
         <el-form-item label="序号:" prop="orderIndex">
-          <el-input placeholder="请输入序号" type="number" v-model="formData.orderIndex"></el-input>
-        </el-form-item>
-        <el-form-item label="网站logo:" prop="logo">
-          <el-upload :action="attachApi + '/api/attach/upload'" :data="attachData" :file-list="logoList" :limit="1" :on-success="onAttachSuccess">
-            <el-button size="small" type="primary">上传logo</el-button>
-            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-          </el-upload>
+          <el-input placeholder="请输入序号" type="number" v-model.number="formData.orderIndex"></el-input>
         </el-form-item>
         <el-form-item label="是否启用:" prop="isEnabled">
           <el-switch v-model="formData.isEnabled"></el-switch>
@@ -34,7 +35,7 @@
 
 <script>
 import { isEmpty } from '../../common/index'
-import { friendLinkApi } from '../../api/admin/adminapi'
+import { bannerApi } from '../../api/admin/adminapi'
 export default {
   props: {
     visible: {
@@ -52,21 +53,18 @@ export default {
       attachApi: process.env.VUE_APP_ATTACH_API,
       formData: {
         id: '',
-        siteCode: '',
-        siteName: '',
+        title: '',
+        imgUrl: '',
         link: '',
         orderIndex: 0,
-        logo: '',
         isEnabled: true
       },
-      logoList: [
-      ],
       rules: {
-        siteName: [
-          { required: true, message: '请输入网站名称', trigger: 'blur' }
+        title: [
+          { required: true, message: '请输入标题', trigger: 'blur' }
         ],
-        siteCode: [
-          { required: true, message: '请输入网站code', trigger: 'blur' }
+        imgUrl: [
+          { required: true, message: '请上传首页横幅图片', trigger: 'blur' }
         ]
       }
     }
@@ -76,7 +74,7 @@ export default {
       var that = this
       if (isEmpty(that.id)) {
         that.loading = true
-        friendLinkApi.add(that.formData)
+        bannerApi.add(that.formData)
           .then(() => {
             that.loading = false
             that.onSaveSuccess()
@@ -87,7 +85,7 @@ export default {
           })
       } else {
         that.loading = true
-        friendLinkApi.update(that.formData)
+        bannerApi.update(that.formData)
           .then(() => {
             that.loading = false
             that.onSaveSuccess()
@@ -103,7 +101,7 @@ export default {
     },
     getDetail(id) {
       var that = this
-      friendLinkApi.getDetail(id)
+      bannerApi.getDetail(id)
         .then(res => {
           that.formData = res.data
         })
@@ -121,11 +119,10 @@ export default {
     onSaveSuccess() {
       this.$emit('success')
     },
-    onAttachSuccess(response, file, fileList) {
+    onAttachSuccess(response) {
       var that = this
       if (response && response.success === 1) {
-        that.logoList = fileList
-        that.formData.logo = response.url
+        that.formData.imgUrl = response.url
       } else {
         that.$message({
           message: response.message,
@@ -140,9 +137,9 @@ export default {
     },
     attachData() {
       var attachData = {
-        path: 'logo/'
+        path: 'banner/'
       }
-      if (!isEmpty(this.formData.siteCode)) attachData.fileName = this.formData.siteCode
+      if (!isEmpty(this.formData.title)) attachData.fileName = this.formData.title
       return attachData
     },
     showdrawer() {
