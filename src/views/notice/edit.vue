@@ -16,8 +16,8 @@
             <el-option label="_Top" value="_Top"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="序号:" prop="orderIndex">
-          <el-input placeholder="请输入序号" type="number" v-model.number="formData.orderIndex"></el-input>
+        <el-form-item label="序号:" prop="orderSort">
+          <el-input placeholder="请输入序号" type="number" v-model.number="formData.orderSort"></el-input>
         </el-form-item>
         <el-form-item label="是否启用:" prop="isEnabled">
           <el-switch v-model="formData.isEnabled"></el-switch>

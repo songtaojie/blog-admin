@@ -2,20 +2,13 @@
   <div class="p-2 text-left">
     <el-button @click="handleAdd" class="mb-2">添加</el-button>
     <el-table :data="tableData" border>
-      <el-table-column header-align="center" label="网站名称" prop="siteName" width="250"></el-table-column>
-      <el-table-column align="center" label="网站logo" prop="logo" width="150">
+      <el-table-column header-align="center" label="标签名字" prop="name"></el-table-column>
+      <el-table-column align="center" label="预览" prop="bGColor" width="150">
         <template slot-scope="scope">
-          <el-image :src="scope.row.logo" style="width:40px" v-if="!isEmpty(scope.row.logo)"></el-image>
-          <span v-else>-</span>
+          <span :style="{ 'background-color': scope.row.bgColor}" class="tag">{{scope.row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column header-align="center" label="网站链接" prop="link">
-        <template slot-scope="scope">
-          {{scope.row.link}}
-          <el-link :href="scope.row.link" :underline="false" target="_blank" type="primary" v-if="!isEmpty(scope.row.link)">【{{scope.row.siteName}}】</el-link>
-          <span v-else>-</span>
-        </template>
-      </el-table-column>
+      <el-table-column align="center" label="序号" prop="orderSort" width="80"></el-table-column>
       <el-table-column align="center" label="状态" prop="isEnabled" width="80">
         <template slot-scope="scope">
           <el-switch disabled v-model="scope.row.isEnabled"></el-switch>
@@ -39,16 +32,16 @@
         layout="prev, pager, next"
       ></el-pagination>
     </div>
-    <friend-link-edit :id="id" :visible.sync="showDrawer" @success="handleSuccess"></friend-link-edit>
+    <tag-edit :id="id" :visible.sync="showDrawer" @success="handleSuccess"></tag-edit>
   </div>
 </template>
 <script>
-import { isEmpty } from '../../common/index'
-import { friendLinkApi } from '../../api/admin/adminapi'
-import FriendLinkEdit from './edit.vue'
+import { isEmpty } from '../../../common/index'
+import blogApi from '../../../api/admin/blogmanage'
+import TagEdit from './edit.vue'
 export default {
   components: {
-    FriendLinkEdit
+    TagEdit
   },
   data() {
     return {
@@ -85,7 +78,7 @@ export default {
         confirmButtonText: '确认',
         cancelButtonText: '取消'
       }).then(() => {
-        friendLinkApi.del(row.id).then(() => {
+        blogApi.delTag(row.id).then(() => {
           that.getList()
         })
       })
@@ -103,7 +96,7 @@ export default {
     },
     getList() {
       var that = this
-      friendLinkApi.getPage(that.queryParam)
+      blogApi.getTagPage(that.queryParam)
         .then((res) => {
           that.totalCount = res.data.totalCount
           that.tableData = res.data.items
@@ -118,5 +111,13 @@ export default {
 
 <style scoped>
 .about {
+}
+.tag {
+  display: block;
+  margin: auto;
+  color: #ffffff;
+  border-radius: 10px;
+  margin: 5px auto;
+  padding: 3px 9px;
 }
 </style>

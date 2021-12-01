@@ -5,12 +5,12 @@
       <el-table-column header-align="center" label="标题" prop="title" width="250"></el-table-column>
       <el-table-column header-align="center" label="跳转链接" prop="link"></el-table-column>
       <el-table-column align="center" label="跳转方式" prop="target" width="100"></el-table-column>
-      <el-table-column header-align="center" label="状态" prop="isEnabled" width="80">
+      <el-table-column align="center" label="状态" prop="isEnabled" width="80">
         <template slot-scope="scope">
           <el-switch disabled v-model="scope.row.isEnabled"></el-switch>
         </template>
       </el-table-column>
-      <el-table-column header-align="center" label="操作" width="180">
+      <el-table-column align="center" label="操作" width="180">
         <template slot-scope="scope">
           <el-button @click="handleEdit(scope.row)" size="mini">编辑</el-button>
           <el-button @click="handleDelete(scope.row)" size="mini" type="danger">删除</el-button>

@@ -11,8 +11,8 @@
         <el-form-item label="网站链接:" prop="link">
           <el-input placeholder="请输入网站链接" required v-model="formData.link"></el-input>
         </el-form-item>
-        <el-form-item label="序号:" prop="orderIndex">
-          <el-input placeholder="请输入序号" type="number" v-model="formData.orderIndex"></el-input>
+        <el-form-item label="序号:" prop="orderSort">
+          <el-input placeholder="请输入序号" type="number" v-model="formData.orderSort"></el-input>
         </el-form-item>
         <el-form-item label="网站logo:" prop="logo">
           <el-upload :action="attachApi + '/api/attach/upload'" :data="attachData" :file-list="logoList" :limit="1" :on-success="onAttachSuccess">
@@ -55,7 +55,7 @@ export default {
         siteCode: '',
         siteName: '',
         link: '',
-        orderIndex: 0,
+        orderSort: 0,
         logo: '',
         isEnabled: true
       },

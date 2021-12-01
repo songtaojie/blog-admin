@@ -18,8 +18,8 @@
         <el-form-item label="网站链接:" prop="link">
           <el-input placeholder="请输入网站链接" required v-model="formData.link"></el-input>
         </el-form-item>
-        <el-form-item label="序号:" prop="orderIndex">
-          <el-input placeholder="请输入序号" type="number" v-model.number="formData.orderIndex"></el-input>
+        <el-form-item label="序号:" prop="orderSort">
+          <el-input placeholder="请输入序号" type="number" v-model.number="formData.orderSort"></el-input>
         </el-form-item>
         <el-form-item label="是否启用:" prop="isEnabled">
           <el-switch v-model="formData.isEnabled"></el-switch>
@@ -56,7 +56,7 @@ export default {
         title: '',
         imgUrl: '',
         link: '',
-        orderIndex: 0,
+        orderSort: 0,
         isEnabled: true
       },
       rules: {

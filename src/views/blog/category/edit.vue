@@ -1,12 +1,12 @@
 <template>
-  <el-drawer :before-close="onBeforeClose" :title="isAdd?'添加时间轴':'编辑时间轴'" :visible.sync="visible" @open="onDrawerOpen" ref="drawer" size="35%">
+  <el-drawer :before-close="onBeforeClose" :title="isAdd?'添加栏目':'编辑栏目'" :visible.sync="visible" @open="onDrawerOpen" ref="drawer" size="35%">
     <div class="d-flex flex-column p-4 h-100">
       <el-form :model="formData" :rules="rules" @submit.stop.prevent="onSubmit" class="flex-fill" label-width="85px" ref="ruleForm">
-        <el-form-item label="内容" prop="content">
-          <el-input :rows="2" placeholder="请输入内容" type="textarea" v-model="formData.content"></el-input>
+        <el-form-item label="栏目名称" prop="name">
+          <el-input placeholder="请输入栏目名称" v-model="formData.name"></el-input>
         </el-form-item>
-        <el-form-item label="跳转链接:" prop="link">
-          <el-input placeholder="请输入跳转链接" required v-model="formData.link"></el-input>
+        <el-form-item label="描述" prop="description">
+          <el-input placeholder="请输入描述" type="textarea" v-model="formData.description"></el-input>
         </el-form-item>
         <el-form-item label="序号:" prop="orderSort">
           <el-input placeholder="请输入序号" type="number" v-model="formData.orderSort"></el-input>
@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import { isEmpty } from '../../common/index'
-import { timelineApi } from '../../api/admin/adminapi'
+import { isEmpty } from '../../../common/index'
+import blogApi from '../../../api/admin/blogmanage'
 export default {
   props: {
     visible: {
@@ -42,14 +42,16 @@ export default {
       loading: false,
       formData: {
         id: '',
-        content: '',
-        link: '',
+        name: '',
+        description: '',
         orderSort: 0,
         isEnabled: true
       },
+      logoList: [
+      ],
       rules: {
-        content: [
-          { required: true, message: '请输入内容', trigger: 'blur' }
+        name: [
+          { required: true, message: '请输入栏目名称', trigger: 'blur' }
         ]
       }
     }
@@ -57,36 +59,23 @@ export default {
   methods: {
     onSubmit() {
       var that = this
-      if (isEmpty(that.id)) {
-        that.loading = true
-        timelineApi.add(that.formData)
-          .then(() => {
-            that.loading = false
-            that.onSaveSuccess()
-            that.onCancle()
-          })
-          .catch(() => {
-            that.loading = false
-          })
-      } else {
-        that.loading = true
-        timelineApi.update(that.formData)
-          .then(() => {
-            that.loading = false
-            that.onSaveSuccess()
-            that.onCancle()
-          })
-          .catch(() => {
-            that.loading = false
-          })
-      }
+      that.loading = true
+      blogApi.addorUpdateCategory(that.formData)
+        .then(() => {
+          that.loading = false
+          that.onSaveSuccess()
+          that.onCancle()
+        })
+        .catch(() => {
+          that.loading = false
+        })
     },
     onCancle() {
       this.$refs.drawer.closeDrawer()
     },
     getDetail(id) {
       var that = this
-      timelineApi.getDetail(id)
+      blogApi.getCategoryDetail(id)
         .then(res => {
           that.formData = res.data
         })

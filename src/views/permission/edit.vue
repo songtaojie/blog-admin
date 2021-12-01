@@ -3,7 +3,7 @@
     <div class="d-flex flex-column p-4 h-100">
       <el-form :model="formData" :rules="rules" @submit.stop.prevent="onSubmit" class="flex-fill" label-width="115px" ref="ruleForm">
         <el-form-item label="菜单类型:" prop="menuType">
-          <el-radio-group v-model="formData.menuType">
+          <el-radio-group :disabled="formData.isSystem" v-model="formData.menuType">
             <el-radio :label="0">目录</el-radio>
             <el-radio :label="1">菜单</el-radio>
             <el-radio :label="2">按钮</el-radio>
@@ -12,6 +12,7 @@
         <el-form-item label="上级菜单" prop="parentId">
           <!-- <el-input v-model="formData.parentId" v-show="false" /> -->
           <el-cascader
+            :disabled="formData.isSystem"
             :options="menuTreeList"
             :props="{ checkStrictly: true, label: 'name', value: 'id' }"
             :show-all-levels="false"
@@ -24,7 +25,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="菜单/按钮编号:" prop="code">
-              <el-input autocomplete="off" placeholder="请输入菜单/按钮编号" v-model="formData.code"></el-input>
+              <el-input :disabled="formData.isSystem" autocomplete="off" placeholder="请输入菜单/按钮编号" v-model="formData.code"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -42,11 +43,11 @@
               <br />如果是外链，请带上协议，比如 https://www.baidu.com
               <br />
             </div>
-            <el-input auto-complete="off" placeholder="请输入路由地址" v-model="formData.path"></el-input>
+            <el-input :disabled="formData.isSystem" auto-complete="off" placeholder="请输入路由地址" v-model="formData.path"></el-input>
           </el-tooltip>
         </el-form-item>
         <el-form-item label="组件路径:" prop="component" v-if="formData.menuType !==2">
-          <el-input auto-complete="off" placeholder="请输入组件路径" v-model="formData.component"></el-input>
+          <el-input :disabled="formData.isSystem" auto-complete="off" placeholder="请输入组件路径" v-model="formData.component"></el-input>
         </el-form-item>
         <el-form-item label="描述:">
           <el-input placeholder="请输入菜单描述" v-model="formData.description"></el-input>
@@ -139,6 +140,7 @@ export default {
         isHide: false,
         iskeepAlive: false,
         icon: '',
+        isSystem: false,
         moduleIds: ''
       },
       menuTreeList: [],

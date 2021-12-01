@@ -9,7 +9,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item prop="categoryId">
-            <hx-select api="/admin/api/enum/getcategorylist" placeholder="请选择文章分类" v-model="formData.categoryId"></hx-select>
+            <hx-select api="/admin/api/enum/getcategorylist" placeholder="请选择系统分类" v-model="formData.categoryId"></hx-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -67,34 +67,42 @@
       </el-form-item>
       <el-form-item>
         <el-row>
+          <el-col class="d-flex align-items-center">
+            <label class="text-left mb-0 blog-category-label">个人分类：</label>
+            <hx-input
+              :editable="item.editable"
+              :id="item.id"
+              :key="item.id"
+              @blur="onInputBlur"
+              @clear="onClear"
+              @enter="onEnter"
+              v-for="item in formData.personTags"
+              v-model.trim="item.name"
+            ></hx-input>
+            <el-button @click="onAddTag" class="hx-icon-square d-flex align-items-center" type="text">
+              <i class="el-icon-circle-plus"></i>添加分类
+            </el-button>
+          </el-col>
+        </el-row>
+      </el-form-item>
+      <el-form-item>
+        <el-row>
           <el-col :span="12">
-            <label class="text-left mb-0 blog-category-label">文章标签：</label>
             <el-checkbox-group class="d-flex flex-wrap justify-content-start align-items-start" v-model="tagSelected">
               <el-checkbox :key="tag.id" :label="tag.id" border v-for="tag in tagList">{{tag.name}}</el-checkbox>
             </el-checkbox-group>
           </el-col>
         </el-row>
       </el-form-item>
-      <el-form-item label="文章类型:">
+      <el-form-item>
         <el-row>
           <el-col :sm="8" :xs="24">
-            <el-select placeholder="请选择文章类型" v-model="formData.blogType">
-              <el-option :value="0" label="原创"></el-option>
-              <el-option :value="1" label="转载"></el-option>
-              <el-option :value="2" label="翻译"></el-option>
-            </el-select>
+            <hx-select api="/admin/api/enum/GetBlogTypeList" placeholder="请选择文章类型" v-model="formData.blogTypeId"></hx-select>
           </el-col>
-          <el-col :sm="8" :xs="24">
-            <label class="text-left mb-0 blog-category-label">文章设置：</label>
-            <el-checkbox false-label="N" true-label="Y" v-model="formData.isTop">置顶</el-checkbox>
+          <el-col :sm="16" :xs="24">
+            <el-checkbox false-label="N" true-label="Y" v-model="formData.personTop">个人置顶</el-checkbox>
+            <el-checkbox false-label="N" true-label="Y" v-model="formData.private">仅自己可见</el-checkbox>
             <el-checkbox false-label="N" true-label="Y" v-model="formData.canCmt">允许评论</el-checkbox>
-          </el-col>
-        </el-row>
-      </el-form-item>
-      <el-form-item label="原文链接:" v-if="formData.blogType !== 0">
-        <el-row>
-          <el-col :sm="12" :xs="24">
-            <el-input placeholder="请输入转载/翻译原文链接" v-model="formData.sourceLink"></el-input>
           </el-col>
         </el-row>
       </el-form-item>
@@ -111,6 +119,7 @@
 </template>
 
 <script>
+import HxInput from '@/components/HxInput.vue'
 import { guid, isEmpty, formHex } from '../../common/index'
 import HxSelect from '@/components/HxSelect.vue'
 import blogApi from '../../api/admin/blogmanage.js'
@@ -120,6 +129,7 @@ export default {
   components: {
     CkEdit: resolve => require(['./ckedit.vue'], resolve),
     MdEdit: resolve => require(['./mdedit.vue'], resolve),
+    HxInput,
     HxSelect
   },
   data() {
@@ -140,16 +150,17 @@ export default {
       formData: {
         id: '',
         markDown: isUseMdEdit ? 'Y' : 'N',
-        blogType: 0,
-        sourceLink: '',
+        blogTypeId: null,
         categoryId: null,
         coverImgUrl: '',
         title: '',
-        isTop: 'N',
+        personTop: 'N',
+        private: 'N',
         canCmt: 'Y',
         content: '',
         contentHtml: '',
-        publish: 'N'
+        publish: 'N',
+        personTags: []
       },
       rules: {
         title: [
@@ -214,6 +225,81 @@ export default {
         this.tagSelected.splice(index, 1)
       }
     },
+    /**
+     * 失去焦点时，存储输入的数据
+     */
+    onInputBlur(input) {
+      this.addOrClearTag(input)
+    },
+    /**
+     * 添加标签
+     */
+    onAddTag() {
+      var newTag = {
+        id: `newData${guid()}`,
+        editable: true,
+        name: ''
+      }
+      this.formData.personTags.push(newTag)
+    },
+    /**
+     * 回车键按下时，存储输入的数据
+     */
+    onEnter(input) {
+      this.addOrClearTag(input)
+    },
+    addOrClearTag(input, isClear) {
+      var that = this,
+        tags = that.formData.personTags
+      var id = input.id
+      var index = tags.findIndex(p => {
+        return p.id === id
+      })
+      if (index >= 0) {
+        var o = tags[index]
+        var name = o.name
+        if (isClear) {
+          tags.splice(index, 1)
+        } else {
+          if (isEmpty(name)) {
+            tags.splice(index, 1)
+          } else {
+            var filterTags = tags.filter(p => {
+              return p.name === name
+            })
+            if (filterTags.length > 1) {
+              tags.splice(index, 1)
+            } else {
+              // 到这一步才算添加进去
+              tags.editable = false
+              input.blur()
+            }
+          }
+        }
+      }
+    },
+    removeTag2(id) {
+      var tags = this.formData.personTags
+      var index = tags.findIndex(p => {
+        return p.id === id
+      })
+      if (index >= 0) {
+        var o = tags[index]
+        var name = o.name
+        if (isEmpty(name)) {
+          this.formData.personTags.splice(index, 1)
+        } else {
+          var filterTags = tags.filter(p => {
+            return p.name === name
+          })
+          if (filterTags.length > 1) {
+            this.formData.personTags.splice(index, 1)
+          } else {
+            this.formData.personTags[index].editable = false
+          }
+        }
+      }
+    },
     getBlogTagList() {
       var that = this
       blogApi.getTagList().then(res => {
@@ -252,6 +338,26 @@ export default {
       this.$message({
         message: '最多上传一个图片',
         type: 'warning'
+      })
+    }
+  },
+  watch: {
+    tagSelected: function (newTags, oldTags) {
+      var that = this
+      var personTags = that.formData.personTags
+      var tagList = that.tagList
+      oldTags.forEach(t => {
+        var index = personTags.findIndex(p => p.id === t)
+        if (index >= 0) {
+          personTags.splice(index, 1)
+        }
+      })
+      newTags.forEach(t => {
+        var index = personTags.findIndex(p => p.id === t)
+        var o = tagList.find(p => p.id === t)
+        if (index < 0) {
+          personTags.push(o)
+        }
       })
     }
   },

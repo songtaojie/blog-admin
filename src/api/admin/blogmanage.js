@@ -20,5 +20,31 @@ export default {
   },
   del(id) {
     return request.del(`${routePrefix}/Delete/${id}`)
+  },
+  // 博客标签
+  getTagPage(data) {
+    return request.post(`${routePrefix}/GetTagPage`, data)
+  },
+  addorUpdateTag(data) {
+    return request.post(`${routePrefix}/AddOrUpdateTag`, data)
+  },
+  getTagDetail(tagId) {
+    return request.get(`${routePrefix}/getTagDetail/${tagId}`)
+  },
+  delTag(tagId) {
+    return request.del(`${routePrefix}/DeleteTag/${tagId}`)
+  },
+  // 博客栏目
+  getCategoryPage(data) {
+    return request.post(`${routePrefix}/getCategoryPage`, data)
+  },
+  addorUpdateCategory(data) {
+    return request.post(`${routePrefix}/AddOrUpdateCategory`, data)
+  },
+  getCategoryDetail(categoryId) {
+    return request.get(`${routePrefix}/getCategoryDetail/${categoryId}`)
+  },
+  delCategory(categoryId) {
+    return request.del(`${routePrefix}/DeleteCategory/${categoryId}`)
   }
 }
