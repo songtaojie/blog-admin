@@ -1,4 +1,4 @@
-import { isEmpty } from '../../common'
+import { isEmpty, formHex } from '../../common'
 import { AUTH_KEY } from '../../common/constkey'
 let stateData = {
   isAuthenticated: false,
@@ -14,7 +14,7 @@ let stateData = {
 }
 
 if (!isEmpty(localStorage.getItem(AUTH_KEY))) {
-  stateData = JSON.parse(localStorage.getItem(AUTH_KEY))
+  stateData = formHex(localStorage.getItem(AUTH_KEY), true)
 }
 const cacheState = Object.assign(stateData)
 const auth = {
@@ -43,14 +43,18 @@ const auth = {
     UPDATE_AUTH(state, payload) {
       Object.assign(state, {
         isAuthenticated: true,
-        access_token: payload.accessToken,
+        access_token: payload.accessToken
+      })
+      this.commit('UPDATE_EXPIRES', payload.expiresIn)
+    },
+    UPDATE_USER(state, payload) {
+      Object.assign(state, {
         userId: payload.userId,
         userName: payload.userName,
         nickName: payload.nickName,
         avatarUrl: payload.avatarUrl,
         isUseMdEdit: payload.isUseMdEdit
       })
-      this.commit('UPDATE_EXPIRES', payload.expiresIn)
     },
     UPDATE_TOKEN(state, accessToken) {
       state.access_token = accessToken

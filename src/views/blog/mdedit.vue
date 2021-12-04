@@ -87,12 +87,12 @@ export default {
       var that = this
       var formdata = new FormData()
       formdata.append('file', imgfile)
-      that.$api.post('/api/attach/upload', formdata, {
-        // 'Content-Type':'multipart/form-data'
-      })
+      formdata.append('makeThumbnail', true)
+      formdata.append('makeLetterWater', true)
+      that.$api.post('/api/attach/upload', formdata)
         .then(res => {
-          if (res && res.success) {
-            that.$refs.mdedit.$img2Url(pos, res.data)
+          if (res && res.successed) {
+            that.$refs.mdedit.$img2Url(pos, res.url)
           }
 
         })

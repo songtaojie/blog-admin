@@ -4,13 +4,14 @@ import auth from './modules/auth.js'
 import tab from './modules/tab.js'
 import permission from './modules/permission.js'
 import { AUTH_KEY, TOKEN_KEY } from '../common/constkey.js'
+import { toHex } from '../common'
 Vue.use(Vuex)
 const sessionStoragePlugin = store => {
   // 当 store 初始化后调用
   store.subscribe((mutation, state) => {
     // 每次 mutation 之后调用
     // mutation 的格式为 { type, payload }
-    localStorage.setItem(AUTH_KEY, JSON.stringify(state.auth))
+    localStorage.setItem(AUTH_KEY, toHex(state.auth, true))
     localStorage.setItem(TOKEN_KEY, state.auth.access_token)
     if (mutation.type === 'CLEAR_AUTH') {
       // localStorage.clear()

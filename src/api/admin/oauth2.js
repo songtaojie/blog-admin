@@ -4,6 +4,7 @@ import store from '../../store'
 
 function authorizeSuccess(res) {
   store.commit('UPDATE_AUTH', res.data)
+  store.commit('UPDATE_USER', res.data)
 }
 function logoutSuccess() {
   window.localStorage.clear()

@@ -19,6 +19,7 @@ const tab = {
       state.options.push(data)
     },
     delete_tabs(state, route) {
+      debugger
       state.options = state.options.filter(tab => tab.route !== route)
     },
     set_active_index(state, index) {

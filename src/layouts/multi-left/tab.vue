@@ -31,6 +31,7 @@ export default {
       this.$router.push({ path: tab.name })
     },
     removeTab(targetName) {
+      debugger
       const that = this
       const allTabs = that.allTabs
       let activeName = that.activeIndex
@@ -51,6 +52,7 @@ export default {
   },
   watch: {
     $route(to) {
+      debugger
       const that = this
       const path = to.path
       let flag = false // 判断集合中是否已经存在该路由下的tab页，如果存在直接切换即可

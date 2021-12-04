@@ -38,6 +38,7 @@ const toast = function (msg) {
  */
 function loginSuccess(res) {
   store.commit('UPDATE_AUTH', res.data)
+  store.commit('UPDATE_USER', res.data)
 }
 
 

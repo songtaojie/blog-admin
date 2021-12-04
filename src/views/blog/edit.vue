@@ -61,7 +61,7 @@
             <md-edit @getHtml="getHtml" v-model="formData.content"></md-edit>
           </el-col>
           <el-col v-else>
-            <ck-edit v-model="formData.content"></ck-edit>
+            <ck-edit @getHtml="getHtml" v-model="formData.content"></ck-edit>
           </el-col>
         </el-row>
       </el-form-item>

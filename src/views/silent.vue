@@ -43,6 +43,7 @@ export default {
         nickName: user.profile.name
       }
       that.$store.commit('UPDATE_AUTH', auth)
+      that.$store.commit('UPDATE_USER', auth)
       that.$store.commit('UPDATE_TOKEN', user.access_token)
       window.localStorage.user = JSON.stringify(user)
       that.$router.replace('/')

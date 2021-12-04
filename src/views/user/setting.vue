@@ -96,8 +96,17 @@ export default {
     onSubmit() {
       var that = this
       that.loading = true
+      var user = that.$store.getters.user
       userApi.updateMyInfo(that.formData)
         .then(() => {
+          // 更新完信息后，更新本地缓存中数据
+          that.$store.commit('UPDATE_USER', {
+            userId: user.userId,
+            userName: user.userName,
+            nickName: that.formData.nickName,
+            avatarUrl: that.formData.avatarUrl,
+            isUseMdEdit: that.formData.useMdEdit === 'Y'
+          })
           that.loading = false
         })
         .catch(() => {
@@ -115,8 +124,8 @@ export default {
         })
     },
     handleAvatarSuccess(res) {
-      if (res && res.succeeded) {
-        this.formData.avatarUrl = res.data.url
+      if (res && res.success === 1) {
+        this.formData.avatarUrl = res.url
       }
     },
     beforeAvatarUpload(file) {

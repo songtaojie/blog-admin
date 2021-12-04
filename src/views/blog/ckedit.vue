@@ -1,6 +1,15 @@
 <template>
   <div>
-    <ckeditor :editor="editor" :value="value" :config="editorConfig" @ready="onEditorReady" :disabled="!editable" @input="onEditorInput" style="height:500px;"></ckeditor>
+    <ckeditor
+      :config="editorConfig"
+      :disabled="!editable"
+      :editor="editor"
+      :value="value"
+      @input="onEditorInput"
+      @ready="onEditorReady"
+      ref="ckeditor"
+      style="height:500px;"
+    ></ckeditor>
   </div>
 </template>
 <script>
@@ -25,7 +34,7 @@ export default {
   components: {
     ckeditor: CKEditor.component
   },
-  data () {
+  data() {
     return {
       editor: ClassicEditor,
       editorConfig: {
@@ -55,7 +64,7 @@ export default {
     }
   },
   methods: {
-    onEditorReady (editor) {
+    onEditorReady(editor) {
       const url = editor.config.get('file.uploadUrl')
       if (isEmpty(url)) {
         throw new Error('url is required')
@@ -64,8 +73,9 @@ export default {
         return new MyUploadAdapter(loader, url, editor.t)
       }
     },
-    onEditorInput (value) {
+    onEditorInput(value) {
       this.$emit('input', value)
+      this.$emit('getHtml', value)
     }
   }
 }
