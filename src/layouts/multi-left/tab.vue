@@ -31,14 +31,13 @@ export default {
       this.$router.push({ path: tab.name })
     },
     removeTab(targetName) {
-      debugger
       const that = this
-      const allTabs = that.allTabs
+      const tabs = that.allTabs
       let activeName = that.activeIndex
       if (activeName === targetName) {
-        allTabs.forEach((tab, index) => {
+        tabs.forEach((tab, index) => {
           if (tab.route === targetName) {
-            const nextTab = allTabs[index + 1] || allTabs[index - 1]
+            const nextTab = tabs[index + 1] || tabs[index - 1]
             if (nextTab) {
               activeName = nextTab.route
             }
@@ -52,13 +51,13 @@ export default {
   },
   watch: {
     $route(to) {
-      debugger
       const that = this
       const path = to.path
       let flag = false // 判断集合中是否已经存在该路由下的tab页，如果存在直接切换即可
       // allTabs记录当前页面中已存在的tab页
-      for (var i = 0, len = that.allTabs.length; i < len; i++) {
-        const tab = that.allTabs[i]
+      var tabs = that.allTabs
+      for (var i = 0, len = tabs.length; i < len; i++) {
+        const tab = tabs[i]
         if (!flag && tab.route === path) { // 用路由匹配，如果存在即将对应的tab页设置为active显示桌面前端
           flag = true
           that.activeIndex = tab.route
@@ -67,8 +66,8 @@ export default {
       }
       if (!flag) {
         const tab = { route: path, title: to.meta.title, icon: to.meta.icon }
-        this.$store.commit('add_tabs', tab)
         that.activeIndex = tab.route
+        this.$store.commit('add_tabs', tab)
       }
     }
   },
