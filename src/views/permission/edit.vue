@@ -220,7 +220,7 @@ export default {
       } else {
         this.$nextTick(() => {
           this.$refs.ruleForm.clearValidate()
-          // this.$refs.ruleForm.resetFields()
+          this.$refs.ruleForm.resetFields()
         })
         if (this.$refs.treeMenu) this.$refs.treeMenu.handleClear()
         this.formData.code = ''

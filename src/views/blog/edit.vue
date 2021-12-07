@@ -70,7 +70,7 @@
         <el-row>
           <el-col :span="12">
             <label class="text-left mb-0 blog-category-label">文章标签：</label>
-            <el-checkbox-group class="d-flex flex-wrap justify-content-start align-items-start" v-model="tagSelected">
+            <el-checkbox-group class="d-flex flex-wrap justify-content-start align-items-start" v-model="formData.blogTags">
               <el-checkbox :key="tag.id" :label="tag.id" border v-for="tag in tagList">{{tag.name}}</el-checkbox>
             </el-checkbox-group>
           </el-col>
@@ -135,7 +135,6 @@ export default {
       fileList: [],
       tagList: [],
       loading: false,
-      tagSelected: [],
       attachApi: process.env.VUE_APP_ATTACH_API,
       isUseMdEdit: isUseMdEdit === true, // 是否是markdown编辑器
       formData: {
@@ -150,7 +149,8 @@ export default {
         canCmt: 'Y',
         content: '',
         contentHtml: '',
-        publish: 'N'
+        publish: 'N',
+        blogTags: []
       },
       attachData: {
         makeThumbnail: true
@@ -171,6 +171,7 @@ export default {
   methods: {
     handleSubmit(publish) {
       var that = this
+      debugger
       if (isEmpty(that.formData.content)) {
         that.$message({
           message: '请填写博客内容',
@@ -211,11 +212,11 @@ export default {
      */
     onClear(input) {
       this.addOrClearTag(input, true)
-      var index = this.tagSelected.findIndex(t => {
+      var index = this.formData.blogTags.findIndex(t => {
         return t === input.id
       })
       if (index >= 0) {
-        this.tagSelected.splice(index, 1)
+        this.formData.blogTags.splice(index, 1)
       }
     },
     getBlogTagList() {
@@ -232,7 +233,10 @@ export default {
       blogApi.getDetail(id).then(res => {
         that.formData = res.data
         if (!isEmpty(that.formData.blogTags)) {
-          that.tagSelected = that.formData.blogTags.split(',')
+          that.formData.blogTags = that.formData.blogTags.split(',')
+        }
+        else {
+          that.formData.blogTags = []
         }
         if (!isEmpty(that.formData.coverImgUrl)) {
           that.fileList.push({ url: that.formData.coverImgUrl })
