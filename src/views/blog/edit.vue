@@ -18,6 +18,7 @@
           <el-col>
             <el-upload
               :action="attachApi + '/api/attach/upload'"
+              :data="attachData"
               :file-list="fileList"
               :headers="attachHeaders"
               :limit="1"
@@ -151,6 +152,9 @@ export default {
         contentHtml: '',
         publish: 'N'
       },
+      attachData: {
+        makeThumbnail: true
+      },
       rules: {
         title: [
           { required: true, message: '请输入文章标题', trigger: 'blur' }
@@ -244,8 +248,8 @@ export default {
       this.$refs.uploadRef.clearFiles()
     },
     handlePictureSuccess(res) {
-      if (res && res.succeeded) {
-        this.formData.coverImgUrl = res.data.url
+      if (res && res.successed) {
+        this.formData.coverImgUrl = res.thumUrl
       }
     },
     handlePictureExceed() {
