@@ -1,10 +1,10 @@
 import request from '../http.js'
 // 接口管理页面的相关接口
-const friendLinkPrefix = '/admin/api/FriendLink'
+const friendLinkPrefix = '/admin/api/FriendLinkManage'
 // 接口管理页面的相关接口
-const noticePrefix = '/admin/api/notice'
+const noticePrefix = '/admin/api/noticeManage'
 // 首页横幅相关接口
-const bannerPrefix = '/admin/api/banner'
+const bannerPrefix = '/admin/api/BannerManage'
 export const friendLinkApi = {
   // 分页列表
   getPage(data) {
@@ -62,7 +62,7 @@ export const bannerApi = {
   }
 }
 // 首页横幅相关接口
-const timelinePrefix = '/admin/api/timeline'
+const timelinePrefix = '/admin/api/timelineManage'
 export const timelineApi = {
   // 分页列表
   getPage(data) {
