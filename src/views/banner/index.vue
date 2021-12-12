@@ -3,7 +3,13 @@
     <el-button @click="handleAdd" class="mb-2">添加</el-button>
     <el-table :data="tableData" border>
       <el-table-column header-align="center" label="标题" prop="title" width="250"></el-table-column>
-      <el-table-column header-align="center" label="跳转链接" prop="link"></el-table-column>
+      <el-table-column header-align="center" label="跳转链接" prop="link">
+        <template slot-scope="scope">
+          {{scope.row.link}}
+          <el-link :href="scope.row.link" :underline="false" target="_blank" type="primary" v-if="!isEmpty(scope.row.link)">【查看】</el-link>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="跳转方式" prop="target" width="100"></el-table-column>
       <el-table-column align="center" label="状态" prop="isEnabled" width="80">
         <template slot-scope="scope">
@@ -33,7 +39,7 @@
 </template>
 <script>
 import { isEmpty } from '../../common/index'
-import adminapi from '../../api/admin/adminapi'
+import { bannerApi } from '../../api/admin/adminapi'
 import BannerEdit from './edit.vue'
 export default {
   components: {
@@ -74,7 +80,7 @@ export default {
         confirmButtonText: '确认',
         cancelButtonText: '取消'
       }).then(() => {
-        adminapi.friendLink.del(row.id).then(() => {
+        bannerApi.del(row.id).then(() => {
           that.getList()
         })
       })
@@ -92,7 +98,7 @@ export default {
     },
     getList() {
       var that = this
-      adminapi.friendLink.getPage(that.queryParam)
+      bannerApi.getPage(that.queryParam)
         .then((res) => {
           that.totalCount = res.data.totalCount
           that.tableData = res.data.items

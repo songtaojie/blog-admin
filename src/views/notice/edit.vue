@@ -10,10 +10,10 @@
         </el-form-item>
         <el-form-item label="跳转方式:" prop="target" v-if="!isEmpty(formData.link)">
           <el-select placeholder="请选择跳转方式" v-model="formData.target">
-            <el-option label="_Blank" value="_Blank"></el-option>
-            <el-option label="_Self" value="_Self"></el-option>
-            <el-option label="_Parent" value="_Parent"></el-option>
-            <el-option label="_Top" value="_Top"></el-option>
+            <el-option label="_blank" value="_blank"></el-option>
+            <el-option label="_self" value="_self"></el-option>
+            <el-option label="_parent" value="_parent"></el-option>
+            <el-option label="_top" value="_top"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="序号:" prop="orderSort">
