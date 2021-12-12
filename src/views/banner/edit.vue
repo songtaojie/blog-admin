@@ -131,10 +131,12 @@ export default {
       this.$emit('update:visible', false)
     },
     onDrawerOpen() {
-      if (!isEmpty(this.id)) {
-        this.getDetail(this.id)
-      } else if (this.$refs.ruleForm) {
-        this.$refs.ruleForm.resetFields()
+      var that = this
+      if (!isEmpty(that.id)) {
+        that.getDetail(that.id)
+      } else if (that.$refs.ruleForm) {
+        that.$refs.ruleForm.resetFields()
+        that.formData.imgUrl = ''
       }
     },
     onSaveSuccess() {
