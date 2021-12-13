@@ -8,6 +8,7 @@
         <el-form-item label="图片:" prop="imgUrl">
           <el-upload
             :action="attachApi + '/api/attach/upload'"
+            :file-list="fileList"
             :headers="attachHeaders"
             :limit="1"
             :on-exceed="handlePictureExceed"
@@ -79,6 +80,7 @@ export default {
         orderSort: 0,
         isEnabled: true
       },
+      fileList: [],
       rules: {
         title: [
           { required: true, message: '请输入标题', trigger: 'blur' }
@@ -125,6 +127,9 @@ export default {
       bannerApi.getDetail(id)
         .then(res => {
           that.formData = res.data
+          if (that.formData.imgUrl) {
+            that.fileList = [{ url: that.formData.imgUrl, name: that.formData.imgFileName }]
+          }
         })
     },
     onBeforeClose() {
