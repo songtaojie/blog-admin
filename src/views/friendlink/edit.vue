@@ -59,8 +59,7 @@ export default {
         logo: '',
         isEnabled: true
       },
-      logoList: [
-      ],
+      logoList: [],
       rules: {
         siteName: [
           { required: true, message: '请输入网站名称', trigger: 'blur' }
@@ -112,10 +111,13 @@ export default {
       this.$emit('update:visible', false)
     },
     onDrawerOpen() {
-      if (!isEmpty(this.id)) {
-        this.getDetail(this.id)
-      } else if (this.$refs.ruleForm) {
-        this.$refs.ruleForm.resetFields()
+      var that = this
+      if (!isEmpty(that.id)) {
+        that.getDetail(that.id)
+      } else if (that.$refs.ruleForm) {
+        that.$refs.ruleForm.resetFields()
+        that.logoList = []
+        that.formData.logo = ''
       }
     },
     onSaveSuccess() {
@@ -123,7 +125,7 @@ export default {
     },
     onAttachSuccess(response, file, fileList) {
       var that = this
-      if (response && response.success === 1) {
+      if (response && response.successed) {
         that.logoList = fileList
         that.formData.logo = response.url
       } else {

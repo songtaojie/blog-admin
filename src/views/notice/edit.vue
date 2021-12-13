@@ -50,12 +50,10 @@ export default {
       loading: false,
       formData: {
         id: '',
-        name: '',
-        routeUrl: '',
-        controller: '',
-        action: '',
-        description: '',
-        orderSort: '',
+        content: '',
+        link: '',
+        target: '',
+        orderSort: 0,
         isEnabled: true
       },
       rules: {
