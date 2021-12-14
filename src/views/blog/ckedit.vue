@@ -39,10 +39,10 @@ export default {
       editor: ClassicEditor,
       editorConfig: {
         placeholder: '开始编写博客!',
-        removePlugins: ['Link', 'BlockQuote', 'MediaEmbed', 'CKFinder'],
-        // extraPlugins:[MyUploadPlugin],
+        removePlugins: ['MediaEmbed', 'CKFinder'],
+        // // extraPlugins:[MyUploadPlugin],
         toolbar: {
-          items: ['heading', '|', 'bold', 'italic', '|', 'bulletedList', 'numberedList', '|', 'outdent', 'indent', '|', 'imageUpload', 'insertTable', '|', 'undo', 'redo']
+          items: ['heading', '|', 'bold', 'italic', 'link', '|', 'bulletedList', 'numberedList', '|', 'outdent', 'indent', '|', 'imageUpload', 'insertTable', '|', 'undo', 'redo']
         },
         file: {
           // Upload the images to the server using the CKFinder QuickUpload command.

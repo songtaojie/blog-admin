@@ -142,6 +142,7 @@ export default {
       } else if (that.$refs.ruleForm) {
         that.$refs.ruleForm.resetFields()
         that.formData.imgUrl = ''
+        that.fileList = []
       }
     },
     onSaveSuccess() {

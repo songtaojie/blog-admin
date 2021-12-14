@@ -5,13 +5,13 @@
         <el-form-item label="标签名称" prop="name">
           <el-input placeholder="请输入标签名称" v-model="formData.name"></el-input>
         </el-form-item>
-        <el-form-item label="背景颜色" prop="bGColor">
+        <el-form-item label="背景颜色" prop="bgColor">
           <el-row>
             <el-col :span="4">
-              <el-color-picker v-model="formData.bGColor"></el-color-picker>
+              <el-color-picker v-model="formData.bgColor"></el-color-picker>
             </el-col>
             <el-col :span="12">
-              <el-input disabled v-model="formData.bGColor"></el-input>
+              <el-input disabled v-model="formData.bgColor"></el-input>
             </el-col>
           </el-row>
         </el-form-item>
@@ -50,7 +50,7 @@ export default {
       formData: {
         id: '',
         name: '',
-        bGColor: '#409EFF',
+        bgColor: '#409EFF',
         orderSort: 0,
         isEnabled: true
       },
@@ -58,7 +58,7 @@ export default {
         name: [
           { required: true, message: '请输入标签名称', trigger: 'blur' }
         ],
-        bGColor: [
+        bgColor: [
           { required: true, message: '请选择标签背景色', trigger: 'change' }
         ]
       }

@@ -56,7 +56,7 @@ export default {
     handleEdit(row) {
       var p = toHex({
         id: row.id,
-        isMarkDown: row.isMarkDown
+        isMd: row.isMarkDown
       }, true)
       this.$router.push({
         path: '/blog/edit',

@@ -112,7 +112,7 @@
 </template>
 
 <script>
-import { guid, isEmpty, formHex } from '../../common/index'
+import { isEmpty, formHex } from '../../common/index'
 import HxSelect from '@/components/HxSelect.vue'
 import blogApi from '../../api/admin/blogmanage.js'
 import { TOKEN_TYPE } from '../../common/constkey'
@@ -171,7 +171,6 @@ export default {
   methods: {
     handleSubmit(publish) {
       var that = this
-      debugger
       if (isEmpty(that.formData.content)) {
         that.$message({
           message: '请填写博客内容',
@@ -207,18 +206,6 @@ export default {
         }
       })
     },
-    /**
-     * 删除时，清除输入的数据
-     */
-    onClear(input) {
-      this.addOrClearTag(input, true)
-      var index = this.formData.blogTags.findIndex(t => {
-        return t === input.id
-      })
-      if (index >= 0) {
-        this.formData.blogTags.splice(index, 1)
-      }
-    },
     getBlogTagList() {
       var that = this
       blogApi.getTagList().then(res => {
@@ -232,12 +219,6 @@ export default {
       const that = this
       blogApi.getDetail(id).then(res => {
         that.formData = res.data
-        if (!isEmpty(that.formData.blogTags)) {
-          that.formData.blogTags = that.formData.blogTags.split(',')
-        }
-        else {
-          that.formData.blogTags = []
-        }
         if (!isEmpty(that.formData.coverImgUrl)) {
           that.fileList.push({ url: that.formData.coverImgUrl })
         }
@@ -268,7 +249,7 @@ export default {
     if (!isEmpty(this.$route.query.p)) {
       var param = formHex(this.$route.query.p, true)
       if (!isEmpty(param.id)) {
-        this.isUseMdEdit = param.isMarkDown
+        this.isUseMdEdit = param.isMd
         this.getDetail(param.id)
       }
     }
