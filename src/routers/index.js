@@ -78,8 +78,8 @@ export const constRouterMap = [
 
 
 const createRouter = () => new VueRouter({
-  // mode: 'history',
-  // base: process.env.BASE_URL,
+  mode: 'history',
+  base: '/admin/',
   routes: constRouterMap
 })
 
