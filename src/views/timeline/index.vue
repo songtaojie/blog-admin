@@ -28,16 +28,16 @@
         layout="prev, pager, next"
       ></el-pagination>
     </div>
-    <friend-link-edit :id="id" :visible.sync="showDrawer" @success="handleSuccess"></friend-link-edit>
+    <time-line-edit :id="id" :visible.sync="showDrawer" @success="handleSuccess"></time-line-edit>
   </div>
 </template>
 <script>
 import { isEmpty } from '../../common/index'
-import adminapi from '../../api/admin/adminapi'
-import FriendLinkEdit from './edit.vue'
+import { timelineApi } from '../../api/admin/adminapi'
+import TimeLineEdit from './edit.vue'
 export default {
   components: {
-    FriendLinkEdit
+    TimeLineEdit
   },
   data() {
     return {
@@ -74,7 +74,7 @@ export default {
         confirmButtonText: '确认',
         cancelButtonText: '取消'
       }).then(() => {
-        adminapi.friendLink.del(row.id).then(() => {
+        timelineApi.del(row.id).then(() => {
           that.getList()
         })
       })
@@ -92,7 +92,7 @@ export default {
     },
     getList() {
       var that = this
-      adminapi.friendLink.getPage(that.queryParam)
+      timelineApi.getPage(that.queryParam)
         .then((res) => {
           that.totalCount = res.data.totalCount
           that.tableData = res.data.items

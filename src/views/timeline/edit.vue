@@ -6,7 +6,7 @@
           <el-input :rows="2" placeholder="请输入内容" type="textarea" v-model="formData.content"></el-input>
         </el-form-item>
         <el-form-item label="跳转链接:" prop="link">
-          <el-input placeholder="请输入跳转链接" required v-model="formData.link"></el-input>
+          <el-input placeholder="请输入跳转链接" v-model="formData.link"></el-input>
         </el-form-item>
         <el-form-item label="序号:" prop="orderSort">
           <el-input placeholder="请输入序号" type="number" v-model="formData.orderSort"></el-input>
@@ -44,6 +44,7 @@ export default {
         id: '',
         content: '',
         link: '',
+        target: '_blank',
         orderSort: 0,
         isEnabled: true
       },
