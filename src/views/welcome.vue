@@ -20,8 +20,8 @@
         <el-table-column header-align="center" label="访问接口" prop="url" width="250"></el-table-column>
         <el-table-column align="center" label="请求方式" prop="httpMethod" width="65"></el-table-column>
         <el-table-column align="center" label="耗时(毫秒)" prop="elapsedTime" width="65"></el-table-column>
-        <el-table-column header-align="center" label="请求参数" prop="param" show-overflow-tooltip></el-table-column>
-        <el-table-column header-align="center" label="Agent" prop="agent" show-overflow-tooltip width="180"></el-table-column>
+        <!-- <el-table-column header-align="center" label="请求参数" prop="param" show-overflow-tooltip></el-table-column> -->
+        <el-table-column header-align="center" label="Agent" prop="agent" show-overflow-tooltip></el-table-column>
         <el-table-column align="center" header-align="center" label="执行成功" prop="isEnabled" width="90">
           <template slot-scope="scope">
             <el-tag :type="scope.row.success?'success':'danger'" disable-transitions>{{scope.row.success ? "成功":"失败"}}</el-tag>

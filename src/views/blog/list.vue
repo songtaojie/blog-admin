@@ -4,6 +4,11 @@
       <el-table-column header-align="center" label="标题" prop="title"></el-table-column>
       <el-table-column align="center" header-align="center" label="浏览量" prop="readCount" width="65"></el-table-column>
       <el-table-column align="center" header-align="center" label="评论数" prop="cmtCount" width="65"></el-table-column>
+      <el-table-column align="center" header-align="center" label="是否置顶" prop="isTop" width="100">
+        <template slot-scope="scope">
+          <el-switch active-value="Y" disabled inactive-value="N" v-model="scope.row.isTop"></el-switch>
+        </template>>
+      </el-table-column>
       <el-table-column align="center" header-align="center" label="是否发布" prop="publish" width="100">
         <template slot-scope="scope">
           <el-switch active-value="Y" disabled inactive-value="N" v-model="scope.row.publish"></el-switch>
@@ -46,7 +51,7 @@ export default {
       totalCount: 0,
       queryParam: {
         PageIndex: 1,
-        PageSize: 2,
+        PageSize: 10,
         SortKey: '',
         SortType: 0
       }
@@ -98,8 +103,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.about {
-}
-</style>
