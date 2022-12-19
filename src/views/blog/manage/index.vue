@@ -1,54 +1,66 @@
 <template>
-	<div class="sys-vislog-container">
-		<el-card shadow="hover" :body-style="{ paddingBottom: '0' }">
-			<el-form :model="queryParams" ref="queryForm" :inline="true">
+	<div class="blog-container">
+		<el-card :body-style="{ paddingBottom: '0' }" shadow="hover">
+			<el-form :inline="true" :model="queryParams" ref="queryForm">
 				<el-form-item label="开始时间" prop="name">
-					<el-date-picker v-model="queryParams.startTime" type="datetime" placeholder="开始时间" :shortcuts="shortcuts" />
+					<el-date-picker :shortcuts="shortcuts" placeholder="开始时间" type="datetime" v-model="queryParams.startTime" />
 				</el-form-item>
 				<el-form-item label="结束时间" prop="code">
-					<el-date-picker v-model="queryParams.endTime" type="datetime" placeholder="结束时间" :shortcuts="shortcuts" />
+					<el-date-picker :shortcuts="shortcuts" placeholder="结束时间" type="datetime" v-model="queryParams.endTime" />
 				</el-form-item>
 				<el-form-item>
-					<el-button icon="ele-Refresh" @click="resetQuery"> 重置 </el-button>
-					<el-button type="primary" icon="ele-Search" @click="handleQuery" v-auth="'sysVislog:page'"> 查询 </el-button>
+					<el-button @click="resetQuery" icon="ele-Refresh">重置</el-button>
+					<el-button @click="handleQuery" icon="ele-Search" type="primary" v-auth="'blodManage:page'">查询</el-button>
+					<!-- <el-button icon="ele-Plus" @click="openAddConfig" v-auth="'blodManage:add'"> 新增 </el-button> -->
 					<!-- <el-button icon="ele-DeleteFilled" type="danger" @click="clearLog" v-auth="'sysVislog:clear'"> 清空 </el-button> -->
 				</el-form-item>
 			</el-form>
 		</el-card>
 
 		<el-card shadow="hover" style="margin-top: 8px">
-			<el-table :data="logData" style="width: 100%" v-loading="loading" border>
-				<el-table-column type="index" label="序号" width="55" align="center" />
-				<el-table-column prop="account" label="账号名称" show-overflow-tooltip />
-				<el-table-column prop="realName" label="真实姓名" show-overflow-tooltip />
-				<el-table-column prop="success" label="状态" width="70" show-overflow-tooltip>
+			<el-table :data="logData" border style="width: 100%" v-loading="loading">
+				<el-table-column align="center" label="序号" type="index" width="55" />
+				<el-table-column header-align="center" label="标题" prop="title"></el-table-column>
+				<el-table-column align="center" label="浏览量" prop="readCount" width="70"></el-table-column>
+				<el-table-column align="center" label="评论数" prop="cmtCount" width="70"></el-table-column>
+				<el-table-column align="center" label="是否置顶" prop="isTop" width="100">
 					<template #default="scope">
-						<el-tag type="success" v-if="scope.row.success === 1">成功</el-tag>
-						<el-tag type="danger" v-else>失败</el-tag>
+						<el-switch active-value="true" disabled inactive-value="false" v-model="scope.row.isTop"></el-switch>
 					</template>
 				</el-table-column>
-				<el-table-column prop="ip" label="IP地址" show-overflow-tooltip />
-				<el-table-column prop="browser" label="浏览器" show-overflow-tooltip />
-				<el-table-column prop="os" label="操作系统" show-overflow-tooltip />
-				<el-table-column prop="visType" label="类型" width="70" align="center" show-overflow-tooltip>
+				<el-table-column label="状态" prop="success" width="70">
 					<template #default="scope">
-						<el-tag type="success" v-if="scope.row.visType === 1">登录</el-tag>
-						<el-tag type="danger" v-else>退出</el-tag>
+						<el-tag type="success" v-if="scope.row.status === 1">发布</el-tag>
+						<el-tag type="danger" v-else>草稿</el-tag>
 					</template>
 				</el-table-column>
-				<el-table-column prop="location" label="地址" show-overflow-tooltip />
-				<el-table-column prop="createTime" label="操作时间" align="center" show-overflow-tooltip />
+				<el-table-column header-align="center" label="发布时间" prop="publishDate" show-overflow-tooltip></el-table-column>
+				<el-table-column header-align="center" label="创建时间" prop="createDate" show-overflow-tooltip></el-table-column>
+				<el-table-column align="center" fixed="right" label="操作" show-overflow-tooltip width="140">
+					<template #default="scope">
+						<!-- <el-button icon="ele-Edit" size="small" text type="primary" @click="openEditConfig(scope.row)" v-auth="'sysConfig:update'"> 编辑 </el-button> -->
+						<el-button
+							:disabled="scope.row.sysFlag == 1"
+							@click="delBlog(scope.row)"
+							icon="ele-Delete"
+							size="small"
+							text
+							type="danger"
+							v-auth="'blogManage:delete'"
+						>删除</el-button>
+					</template>
+				</el-table-column>
 			</el-table>
 			<el-pagination
+				:page-sizes="[10, 20, 50, 100]"
+				:total="tableParams.total"
+				@current-change="handleCurrentChange"
+				@size-change="handleSizeChange"
+				background
+				layout="total, sizes, prev, pager, next, jumper"
+				small
 				v-model:currentPage="tableParams.page"
 				v-model:page-size="tableParams.pageSize"
-				:total="tableParams.total"
-				:page-sizes="[10, 20, 50, 100]"
-				small
-				background
-				@size-change="handleSizeChange"
-				@current-change="handleCurrentChange"
-				layout="total, sizes, prev, pager, next, jumper"
 			/>
 		</el-card>
 	</div>
@@ -56,10 +68,10 @@
 
 <script lang="ts">
 import { toRefs, reactive, onMounted, defineComponent } from 'vue';
-import { ElMessage } from 'element-plus';
+import { ElMessageBox, ElMessage } from 'element-plus';
 
 import { getAPI } from '/@/utils/axios-utils';
-import {BlogApi } from '/@/api-services/_business/api';
+import { BlogApi } from '/@/api-services/_business/api';
 import { HtBlog } from '/@/api-services/_business/models';
 
 export default defineComponent({
@@ -77,7 +89,7 @@ export default defineComponent({
 				pageSize: 10,
 				total: 0 as any,
 			},
-			logData: [] as Array<SysLogVis>,
+			logData: [] as Array<HtBlog>,
 		});
 		onMounted(async () => {
 			handleQuery();
@@ -107,6 +119,20 @@ export default defineComponent({
 		// 	ElMessage.success('清空成功');
 		// 	handleQuery();
 		// };
+		// 删除
+		const delBlog = (row: any) => {
+			ElMessageBox.confirm(`确定删除博客：【${row.title}】?`, '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning',
+			})
+				.then(async () => {
+					await getAPI(BlogApi).sysConfigDeletePost({ id: row.id });
+					handleQuery();
+					ElMessage.success('删除成功');
+				})
+				.catch(() => {});
+		};
 		// 改变页面容量
 		const handleSizeChange = (val: number) => {
 			state.tableParams.pageSize = val;
@@ -143,6 +169,7 @@ export default defineComponent({
 			handleQuery,
 			resetQuery,
 			// clearLog,
+			delBlog,
 			shortcuts,
 			handleSizeChange,
 			handleCurrentChange,
