@@ -14,13 +14,13 @@
 /**
  * 
  * @export
- * @interface DeleteConfigInput
+ * @interface DeleteBlogInput
  */
- export interface DeleteConfigInput {
+ export interface DeleteBlogInput {
   /**
    * 主键Id
    * @type {number}
-   * @memberof DeleteConfigInput
+   * @memberof DeleteBlogInput
    */
   id: number;
 }

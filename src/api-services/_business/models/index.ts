@@ -4,3 +4,4 @@ export * from './tenant-business';
 export * from './blog/blog-enum';
 export * from './blog/HtBlog';
 export * from './blog/result-sql-sugar-paged-list-blog';
+export * from './blog/blog-input';

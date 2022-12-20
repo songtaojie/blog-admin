@@ -16,7 +16,7 @@
  // Some imports not used depending on template conditions
  // @ts-ignore
  import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../../../base';
- import { ResultSqlSugarPagedListBlog } from '../../models';
+ import { ResultSqlSugarPagedListBlog,DeleteBlogInput } from '../../models';
  /**
   * BlogApi - axios parameter creator
   * @export
@@ -25,7 +25,7 @@
      return {
           /**
          * 
-         * @summary 获取访问日志分页列表
+         * @summary 获取博客分页列表
          * @param {Date} [startTime] 开始时间
          * @param {Date} [endTime] 结束时间
          * @param {number} [page] 当前页码
@@ -100,13 +100,13 @@
         },
         /**
          * 
-         * @summary 删除参数配置
-         * @param {DeleteConfigInput} [body] 
+         * @summary 删除博客
+         * @param {DeleteBlogInput} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        blogDeletePost: async (body?: DeleteConfigInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/sysConfig/delete`;
+        blogDeletePost: async (body?: DeleteBlogInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/blog/delete`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -150,7 +150,7 @@
      return {
        /**
          * 
-         * @summary 获取访问日志分页列表
+         * @summary 获取博客分页列表
          * @param {Date} [startTime] 开始时间
          * @param {Date} [endTime] 结束时间
          * @param {number} [page] 当前页码
@@ -168,6 +168,20 @@
                 return axios.request(axiosRequestArgs);
             };
         },
+         /**
+         * 
+         * @summary 删除参数配置
+         * @param {DeleteConfigInput} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+          async blogDeletePost(body?: DeleteBlogInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<boolean>>> {
+            const localVarAxiosArgs = await BlogApiAxiosParamCreator(configuration).blogDeletePost(body, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
      }
  };
  
@@ -179,7 +193,7 @@
      return {
          /**
          * 
-         * @summary 获取访问日志分页列表
+         * @summary 获取博客分页列表
          * @param {Date} [startTime] 开始时间
          * @param {Date} [endTime] 结束时间
          * @param {number} [page] 当前页码
@@ -190,22 +204,32 @@
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-          async sysLogVisPageGet(startTime?: Date, endTime?: Date, page?: number, pageSize?: number, field?: string, order?: string, descStr?: string, options?: AxiosRequestConfig): Promise<AxiosResponse<ResultSqlSugarPagedListBlog>> {
+          async blogPageGet(startTime?: Date, endTime?: Date, page?: number, pageSize?: number, field?: string, order?: string, descStr?: string, options?: AxiosRequestConfig): Promise<AxiosResponse<ResultSqlSugarPagedListBlog>> {
             return BlogApiFp(configuration).blogPageGet(startTime, endTime, page, pageSize, field, order, descStr, options).then((request) => request(axios, basePath));
+        },
+         /**
+         * 
+         * @summary 删除博客
+         * @param {DeleteBlogInput} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+          async blogDeletePost(body?: DeleteBlogInput, options?: AxiosRequestConfig): Promise<AxiosResponse<boolean>> {
+            return BlogApiFp(configuration).blogDeletePost(body, options).then((request) => request(axios, basePath));
         },
      };
  };
  
  /**
-  * TenantBusinessApi - object-oriented interface
+  * BlogApi - object-oriented interface
   * @export
-  * @class TenantBusinessApi
+  * @class BlogApi
   * @extends {BaseAPI}
   */
  export class BlogApi extends BaseAPI {
      /**
      * 
-     * @summary 获取访问日志分页列表
+     * @summary 获取博客分页列表
      * @param {Date} [startTime] 开始时间
      * @param {Date} [endTime] 结束时间
      * @param {number} [page] 当前页码
@@ -219,6 +243,17 @@
      */
       public async blogPageGet(startTime?: Date, endTime?: Date, page?: number, pageSize?: number, field?: string, order?: string, descStr?: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<ResultSqlSugarPagedListBlog>> {
         return BlogApiFp(this.configuration).blogPageGet(startTime, endTime, page, pageSize, field, order, descStr, options).then((request) => request(this.axios, this.basePath));
+    },
+     /**
+     * 
+     * @summary 删除博客
+     * @param {DeleteConfigInput} [body] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SysConfigApi
+     */
+      public async blogDeletePost(body?: DeleteBlogInput, options?: AxiosRequestConfig) : Promise<AxiosResponse<boolean>> {
+        return BlogApiFp(this.configuration).blogDeletePost(body, options).then((request) => request(this.axios, this.basePath));
     }
  }
  
